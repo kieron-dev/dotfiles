@@ -1,87 +1,63 @@
-" ------------------------------ PLUGINS ------------------------------
 call plug#begin('~/.vim/plugged')
-    Plug 'benmills/vimux'                                             " Allow vim to do tmux stuff, like open panes for the test plugin
-    Plug 'bronson/vim-trailing-whitespace'
-    " Plug 'christoomey/vim-system-copy'                                " Add mappings to copy to clipboard
-    Plug 'christoomey/vim-tmux-navigator'                             " Navigate through vim splits seamlessly
-    " Plug 'fatih/vim-go'                                               " Golang plugin
-    Plug 'itchyny/lightline.vim'                                      " Light and configurable statusline
-    Plug 'JamshedVesuna/vim-markdown-preview'                         " Preview markdown files in the browser
-    Plug 'janko/vim-test'                                             " Test runner integration
-    " Plug 'josharian/impl'                                             " Generates method stubs for implementing an interface
-    Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Awesome fuzzy finder
-    Plug 'junegunn/fzf.vim'
-    Plug 'junegunn/vim-plug'                                          " This plugin manager
-    Plug 'majutsushi/tagbar'                                          " Outline viewer for vim
-    Plug 'mhinz/vim-grepper'
-    Plug 'mhinz/vim-signify'                                          " Show git diff in the sign column
-    Plug 'mhinz/vim-startify'                                         " Fancy start screen
-    Plug 'milkypostman/vim-togglelist'                                " Toggle quickfix and location windows
-    Plug 'mtth/scratch.vim'                                           " Unobtrusive scratch window
-    Plug 'nanotech/jellybeans.vim'                                    " My current colorscheme
-    " Plug 'neoclide/coc.nvim', {'branch':'release' }
+    Plug 'junegunn/vim-plug'
 
+    Plug 'benmills/vimux'
+    Plug 'bronson/vim-trailing-whitespace'
+    Plug 'christoomey/vim-tmux-navigator'
+    Plug 'itchyny/lightline.vim'
+    Plug 'JamshedVesuna/vim-markdown-preview'
+    Plug 'janko/vim-test'
+    Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+    Plug 'junegunn/fzf.vim'
+    Plug 'majutsushi/tagbar'
+    Plug 'mhinz/vim-grepper'
+    Plug 'mhinz/vim-signify'
+    Plug 'mhinz/vim-startify'
+    Plug 'milkypostman/vim-togglelist'
+    Plug 'mtth/scratch.vim'
+    Plug 'nanotech/jellybeans.vim'
     Plug 'neovim/nvim-lspconfig'
-    " Plug 'nvim-lua/completion-nvim'
     Plug 'hrsh7th/nvim-compe'
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-    " Plug 'glepnir/lspsaga.nvim'
-
-    " Plug 'powerman/vim-plugin-AnsiEsc'                                " ANSI escape sequences concealed, but highlighted as specified
-    " Plug 'rhysd/git-messenger.vim'                                    " Reveal the commit messages under the cursor in a 'popup window'
-    " Plug 'romainl/vim-cool'                                           " Make hlsearch more useful
-    " Plug 'RRethy/vim-illuminate'                                      " Selectively illuminating other uses of the current word under the cursor
-    Plug 'scrooloose/nerdtree'                                        " Directory tree explorer
-    Plug 'SirVer/ultisnips'                                           " Add various code snippets
-    Plug 'tpope/vim-commentary'                                       " Comment stuff out
-    Plug 'tpope/vim-eunuch'                                           " Unix utility commands
-    Plug 'tpope/vim-fugitive'                                         " Git wrapper
-    Plug 'tpope/vim-repeat'                                           " Make . work with tpope's plugins
-    Plug 'tpope/vim-rhubarb'                                          " Open selected code in githb in browser
-    Plug 'tpope/vim-surround'                                         " Provides mappings to easily delete, change and add surroundings (parentheses, brackets, quotes, XML tags, and more) in pairs
-    Plug 'tpope/vim-unimpaired'                                       " Useful mappings
-    Plug 'trayo/vim-ginkgo-snippets'                                  " Add snippets for Ginkgo BDD testing library for go
+    Plug 'scrooloose/nerdtree'
+    Plug 'SirVer/ultisnips'
+    Plug 'tpope/vim-commentary'
+    Plug 'tpope/vim-eunuch'
+    Plug 'tpope/vim-fugitive'
+    Plug 'tpope/vim-repeat'
+    Plug 'tpope/vim-rhubarb'
+    Plug 'tpope/vim-surround'
+    Plug 'tpope/vim-unimpaired'
+    Plug 'trayo/vim-ginkgo-snippets'
     Plug 'trayo/vim-gomega-snippets'
-    Plug 'vim-ruby/vim-ruby'                                          " Ruby plugin
-    Plug 'z0mbix/vim-shfmt', { 'for': 'sh' }                          " Runs shfmt to auto format the current buffer
-    Plug 'zhimsel/vim-stay'                                           " Remember cursor, folds, etc
     Plug 'brianclements/vim-lilypond'
 call plug#end()
-" ---------------------------------------------------------------------
 
-" ------------------------------ GENERAL ------------------------------
-set mouse=a                                                           "Enable mouse
-set backspace=indent,eol,start                                        "Make backspace normal
-set nocompatible                                                      "Disable vi compatibility. Because we're not in 1995
-set tw=0                                                              "Disable automactic line wrapping
-set listchars=tab:▸\ ,trail:~,extends:>,precedes:<,space:·            "Specify whitespace characters visualization
-set encoding=utf8                                                     "Encoding
-set ffs=unix,dos                                                      "File formats that will be tried (in order) when vim reads and writes to a file
-set splitbelow                                                        "Set preview window position to bottom of the page
+set mouse=a
+set backspace=indent,eol,start
+set nocompatible
+set tw=0
+set listchars=tab:▸\ ,trail:~,extends:>,precedes:<,space:·
+set encoding=utf8
+set ffs=unix,dos
+set splitbelow
 set splitright
-set scrolloff=5                                                       "Show at least N lines above/below the cursor.
-set hidden                                                            "Opening a new file when the current buffer has unsaved changes causes files to be hidden instead of closed
-set undolevels=1000                                                   "Undo many times
-set undofile                                                          "Undo across vim sessions
-set noshowmode                                                        "Do not show message on last line when in Insert, Replace or Visual mode
-set termguicolors                                                     "Enable TrueColor
-set inccommand=nosplit                                                "Shows the effects of a command incrementally, as you type
-
-if !has('nvim')
-  set ttymouse=sgr                                                    "Make the mouse work even in columns beyond 223
-endif
+set scrolloff=5
+set hidden
+set undolevels=1000
+set undofile
+set noshowmode
+set termguicolors
+set inccommand=nosplit
 
 let mapleader=' '
 let maplocalleader='\'
 
-" Increase the maximum amount of memory to use for pattern matching
 set maxmempattern=2000
 
-" vimrc key mappings
 nmap <silent> <leader>ve :edit ~/.config/nvim/init.vim<CR>
 nmap <silent> <leader>vs :source ~/.config/nvim/init.vim<CR>
 
-" search mappings
 nnoremap <silent> <leader>ss :Grepper -tool rg<cr>
 nnoremap <leader>sr :Rg
 
@@ -112,14 +88,11 @@ highlight StatusLineNC guibg=#1c1c1c
 highlight StatusLine gui=italic guifg=grey guibg=#1c1c1c
 
 
-" ------------------------------ SPACES & TABS -----------------------------
 set tabstop=4               "Number of visual spaces per TAB
 set softtabstop=4           "Number of spaces in tab when editing
 set expandtab               "Tabs are spaces
 set shiftwidth=4            "Indent with 4 spaces
-" ---------------------------------------------------------------------
 
-" ------------------------------ UI CONFIG ------------------------------
 set number                              "Show line numbers
 filetype indent on                      "Load filetype-specific indent files
 set wildmenu                            "Visual autocomplete for command menu
