@@ -1,26 +1,28 @@
 call plug#begin('~/.vim/plugged')
     Plug 'junegunn/vim-plug'
 
+    Plug 'JamshedVesuna/vim-markdown-preview'
+    Plug 'SirVer/ultisnips'
     Plug 'benmills/vimux'
+    Plug 'brianclements/vim-lilypond'
     Plug 'bronson/vim-trailing-whitespace'
     Plug 'christoomey/vim-tmux-navigator'
+    Plug 'hrsh7th/nvim-compe'
     Plug 'itchyny/lightline.vim'
-    Plug 'JamshedVesuna/vim-markdown-preview'
     Plug 'janko/vim-test'
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
     Plug 'junegunn/fzf.vim'
     Plug 'majutsushi/tagbar'
+    Plug 'lifepillar/vim-solarized8'
     Plug 'mhinz/vim-grepper'
     Plug 'mhinz/vim-signify'
     Plug 'mhinz/vim-startify'
     Plug 'milkypostman/vim-togglelist'
     Plug 'mtth/scratch.vim'
-    Plug 'nanotech/jellybeans.vim'
+    Plug 'dracula/vim', { 'as': 'dracula' }
     Plug 'neovim/nvim-lspconfig'
-    Plug 'hrsh7th/nvim-compe'
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'scrooloose/nerdtree'
-    Plug 'SirVer/ultisnips'
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-eunuch'
     Plug 'tpope/vim-fugitive'
@@ -30,111 +32,54 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-unimpaired'
     Plug 'trayo/vim-ginkgo-snippets'
     Plug 'trayo/vim-gomega-snippets'
-    Plug 'brianclements/vim-lilypond'
 call plug#end()
-
-set mouse=a
-set backspace=indent,eol,start
-set nocompatible
-set tw=0
-set listchars=tab:▸\ ,trail:~,extends:>,precedes:<,space:·
-set encoding=utf8
-set ffs=unix,dos
-set splitbelow
-set splitright
-set scrolloff=5
-set hidden
-set undolevels=1000
-set undofile
-set noshowmode
-set termguicolors
-set inccommand=nosplit
 
 let mapleader=' '
 let maplocalleader='\'
 
+set completeopt=menuone,noselect
+set cursorline
+set encoding=utf8
+set expandtab
+set fillchars+=vert:│
+set foldenable
+set foldexpr=nvim_treesitter#foldexpr()
+set foldlevelstart=99
+set foldmethod=expr
+set hidden
+set hlsearch
+set inccommand=nosplit
+set incsearch
+set listchars=tab:▸\ ,trail:~,extends:>,precedes:<,space:·
 set maxmempattern=2000
+set mouse=a
+set noshowmode
+set number
+set shiftwidth=4
+set showmatch
+set smartcase
+set softtabstop=4
+set splitbelow
+set splitright
+set tabstop=4
+set termguicolors
+set textwidth=0
+set undofile
+set wildmenu
+set wildmode=longest,list:longest
+
+colorscheme solarized8_high
 
 nmap <silent> <leader>ve :edit ~/.config/nvim/init.vim<CR>
 nmap <silent> <leader>vs :source ~/.config/nvim/init.vim<CR>
 
 nnoremap <silent> <leader>ss :Grepper -tool rg<cr>
-nnoremap <leader>sr :Rg
 
-" autoremove trailing whitespace
 autocmd BufWritePre * FixWhitespace
 
-" shell-like navigation while in normal mode
-inoremap <c-b> <c-\><c-o>h
-inoremap <c-f> <c-\><c-o>l
-" ---------------------------------------------------------------------
-
-" ------------------------------ COLORS ------------------------------
-"Enable syntax processing
-syntax enable
-
-colorscheme jellybeans
-
-" Because jellybeans shows wrong background colors for whitespace characters  on current line
-highlight NonText guibg=NONE
-highlight LineNr guifg=#545252 guibg=#1c1c1c
-highlight CursorLine guibg=#232323
-highlight CursorLineNr guibg=#1c1c1c guifg=#6A95EA
-highlight SpecialKey guifg=grey35
-highlight Search gui=bold guifg=#000000 guibg=#6A95EA
-highlight VertSplit guifg=#1c1c1c guibg=#1c1c1c
-highlight SignColumn term=standout guifg=#777777 guibg=#1c1c1c
-highlight StatusLineNC guibg=#1c1c1c
-highlight StatusLine gui=italic guifg=grey guibg=#1c1c1c
-
-
-set tabstop=4               "Number of visual spaces per TAB
-set softtabstop=4           "Number of spaces in tab when editing
-set expandtab               "Tabs are spaces
-set shiftwidth=4            "Indent with 4 spaces
-
-set number                              "Show line numbers
-filetype indent on                      "Load filetype-specific indent files
-set wildmenu                            "Visual autocomplete for command menu
-set wildmode=longest,list:longest
-set completeopt=menuone,noselect
-" set shortmess+=c
-" set lazyredraw                          "Redraw only when we need to.
-set showmatch                           "Highlight matching [{()}]
-set fillchars+=vert:│                   "Solid vertical split line
-set cursorline                          "Highlight current line
-
-augroup CursorLine
-    au!
-    au VimEnter * setlocal cursorline
-    au WinEnter * setlocal cursorline
-    au BufWinEnter * setlocal cursorline
-    au WinLeave * setlocal nocursorline
-augroup END
-" ---------------------------------------------------------------------
-
-" ------------------------------ SEARCHING ------------------------------
-set incsearch
-set hlsearch
-set smartcase
-" ---------------------------------------------------------------------
-
-" ------------------------------ FOLDING ------------------------------
-set foldenable              "Enable folding
-set foldmethod=expr
-set foldexpr=nvim_treesitter#foldexpr()
-set foldlevelstart=99       "Do not close folds when a buffer is opened
-" ---------------------------------------------------------------------
-
-" ------------------------------ MOVEMENT ------------------------------
-"Move vertically (down) by visual line
 nnoremap j gj
 nnoremap k gk
 
-" ---------------------------------------------------------------------
-
-
-" ------------------------------ SANE PASTING---------------------------
 function! RestoreRegister()
   let @" = s:restore_reg
   return ''
@@ -147,12 +92,9 @@ endfunction
 
 " NB: this supports "rp that replaces the selection by the contents of @r
 vnoremap <silent> <expr> p <sid>Repl()
-" ---------------------------------------------------------------------
 
-" ------------------------------ CONTINUE INDENTING---------------------
 vnoremap > >gv
 vnoremap < <gv
-" ---------------------------------------------------------------------
 
 " =======================================================================================
 " =============================== PLUGIN CONFIGURATIONS =================================
@@ -172,38 +114,20 @@ function! NERDTreeToggleAndFind()
   endif
 endfunction
 
-" Toggle NERDTree
-nnoremap <C-n> :call NERDTreeToggleAndFind()<CR>
 nnoremap <silent> \ :NERDTreeToggle<CR>
 nnoremap <silent> \| :NERDTreeFind<cr>
-
-" Single mouse click will open any node
-let g:NERDTreeMouseMode=3
 
 " Close vim if the only window left open is a NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-" Automatically delete the buffer of the file you just deleted with NerdTree
 let NERDTreeAutoDeleteBuffer = 1
-
-" Hide 'Press ? for help' and bookmarks
 let NERDTreeMinimalUI = 1
-
-" Expand directory symbols
 let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
-
-" Do not show whitespace characters in NERDTree window
-autocmd FileType nerdtree setlocal nolist
-
-" Show hidden files
 let NERDTreeShowHidden=1
 
-" --------------------------------------------------------------------------
+autocmd FileType nerdtree setlocal nolist
 
-" --------------------------------- Lightline --------------------------------
-
-" Show statusline
 set laststatus=2
 
 " Colors
@@ -246,7 +170,7 @@ let g:lightline#colorscheme#jellybeans#palette = lightline#colorscheme#flatten(s
 
 " Lightline configs
 let g:lightline = {
-      \ 'colorscheme': 'jellybeans',
+      \ 'colorscheme': 'dracula',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch' ],
@@ -338,36 +262,16 @@ function! LightlineReadonly()
   endif
   return &ft !~? 'help' && &readonly ? 'RO' : ''
 endfunction
-" --------------------------------------------------------------------------
 
 
-" --------------------------------- Vim-Markdown-Preview --------------------------------
-
-" Use Chrome
-let vim_markdown_preview_browser='Google Chrome'
-
-" Use github syntax
 let vim_markdown_preview_github=1
-
-" Leave Ctrl-P alone
 let vim_markdown_preview_hotkey='<Leader>mp'
 
-" --------------------------------------------------------------------------
-
-
-" --------------------------------- Shfmt  -------------------------------
-" Use 2 spaces instead of tabs
-let g:shfmt_extra_args = '-i 2 -ci'
-let g:shfmt_fmt_on_save = 1
-" --------------------------------------------------------------------------
-
-" ----- <CR> saves ----
 nnoremap <cr> :w<cr>
 autocmd BufWritePre *.go lua lsp_organize_imports()
 autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync(nil, 1000)
 autocmd BufWritePre *.rb lua vim.lsp.buf.formatting_sync(nil, 1000)
 
-" --------------------------------- LSP ------------------------------
 lua require('lsp')
 
 lua << EOF
@@ -384,11 +288,7 @@ lua << EOF
 EOF
 
 
-" autocmd BufEnter * lua require'completion'.on_attach()
-" let g:completion_enable_auto_hover = 0
-" let g:completion_enable_snippet = 'UltiSnips'
 let g:UltiSnipsExpandTrigger = '<c-j>'
-" let g:UltiSnipsListSnippets = '<c-tab>'
 let g:UltiSnipsJumpForwardTrigger = '<c-j>'
 let g:UltiSnipsJumpBackwardTrigger = '<c-k>'
 
@@ -420,25 +320,9 @@ let g:compe.source.treesitter = v:true
 let g:compe.source.omni = v:true
 let g:compe.source.ultisnips = v:true
 
-" --------------------------------------------------------------------------
-
-
-" --------------------------------- FuzzyFind  -----------------------------
 let g:fzf_layout = { 'down': '~30%' }
 let g:fzf_buffers_jump = 1
 
-" Show preview when searching files
-command! -bang -nargs=? -complete=dir Files
-  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
-
-" Use Rg for searching for contents and show preview
-command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always --smart-case --no-ignore --hidden --follow --glob "!.git/*" --glob "!vendor/" '.shellescape(<q-args>), 1,
-  \    fzf#vim#with_preview({'down': '60%', 'options': '--bind alt-down:preview-down --bind alt-up:preview-up'},'right:50%', '?'),
-  \   <bang>0)
-
-" hide the statusline of the containing buffer
 augroup fzf
   autocmd!
   autocmd  FileType fzf set laststatus=0 noshowmode noruler
@@ -453,9 +337,7 @@ nnoremap <silent> <leader>fn :bn<cr>
 nnoremap <silent> <leader>fp :bp<cr>
 nnoremap <silent> <leader>fa :A<cr>
 nnoremap <silent> <leader>m `
-" --------------------------------------------------------------------------
-"
-" -------------------------------- Startify --------------------------------
+
 let g:startify_custom_header = map(systemlist('fortune | cowsay'), '"               ". v:val')
 let g:startify_change_to_dir = 0
 let g:startify_change_to_vcs_root = 0
@@ -466,16 +348,13 @@ let g:startify_lists = [
                   \ { 'type': 'bookmarks', 'header': [   'Bookmarks']       },
                   \ { 'type': 'commands',  'header': [   'Commands']        },
                   \ ]
-" --------------------------------------------------------------------------
 
-" ------------------ Testing -----------------------------------------------
 if empty($TMUX)
   let g:test#strategy = 'neoterm'
 else
   let g:test#strategy = 'vimux'
 endif
 
-"" We can customise tests requiring setup as below...
 function! ScriptTestTransform(cmd) abort
   let l:command = a:cmd
 
@@ -496,10 +375,6 @@ nnoremap <silent> <leader>t. :TestLast<cr>
 nnoremap <silent> <leader>tf :TestFile<cr>
 nnoremap <silent> <leader>ts :TestSuite<cr>
 nnoremap <silent> <leader>tg :TestVisit<cr>
-" --------------------------------------------------------------------------
-"
-" -------------------------------- vim-rhubarb -----------------------------
-" open in github
+
 nmap <silent> <leader>gh :Gbrowse<cr>
 vmap <silent> <leader>gh :Gbrowse<cr>
-" --------------------------------------------------------------------------
