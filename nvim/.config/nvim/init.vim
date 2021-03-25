@@ -14,12 +14,12 @@ call plug#begin('~/.vim/plugged')
     Plug 'junegunn/fzf.vim'
     Plug 'majutsushi/tagbar'
     Plug 'lifepillar/vim-solarized8'
+    Plug 'nvim-lua/lsp-status.nvim'
     Plug 'mhinz/vim-grepper'
     Plug 'mhinz/vim-signify'
     Plug 'mhinz/vim-startify'
     Plug 'milkypostman/vim-togglelist'
     Plug 'mtth/scratch.vim'
-    Plug 'dracula/vim', { 'as': 'dracula' }
     Plug 'neovim/nvim-lspconfig'
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     Plug 'scrooloose/nerdtree'
@@ -100,8 +100,6 @@ vnoremap < <gv
 " =============================== PLUGIN CONFIGURATIONS =================================
 " =======================================================================================
 
-" --------------------------------- NERDTree -------------------------------
-
 function! NERDTreeToggleAndFind()
   if (exists('t:NERDTreeBufName') && bufwinnr(t:NERDTreeBufName) != -1)
     execute ':NERDTreeClose'
@@ -130,59 +128,35 @@ autocmd FileType nerdtree setlocal nolist
 
 set laststatus=2
 
-" Colors
-let s:green = [ '#99ad6a', 107 ]
-let s:red = [ '#dd1c1c', 167 ]
-let s:yellow = [ '#ffb964', 215 ]
-let s:blue = [ '#6A95EA', 103, 'bold' ]
-let s:lightgrey = [ '#999494', 'none' ]
-let s:blackish = [ '#1c1c1c', 'none' ]
-let s:darkgrey = [ '#282525', 'none' ]
+lua << END
+    local lsp_status = require('lsp-status')
+    lsp_status.register_progress()
+    local lspconfig = require('lspconfig')
+END
 
-let s:p = {'normal': {}, 'inactive': {}, 'insert': {}, 'replace': {}, 'visual': {}, 'tabline': {}}
+function! LspStatus() abort
+  if luaeval('#vim.lsp.buf_get_clients() > 0')
+    return luaeval("require('lsp-status').status()")
+  endif
 
-" Middle
-let s:p.normal.middle = [ [ s:lightgrey, s:blackish ] ]
-
-" Left
-let s:p.normal.left = [ [ s:blue, s:blackish ], [ s:green, s:blackish ], [ s:red, s:blackish ], [ s:lightgrey, s:blackish ] ]
-let s:p.insert.left = [ [ s:blue, s:blackish ], [ s:green, s:blackish ], [ s:red, s:blackish ], [ s:lightgrey, s:blackish ] ]
-let s:p.replace.left = [ [ s:blue, s:blackish ], [ s:green, s:blackish ], [ s:red, s:blackish ], [ s:lightgrey, s:blackish ] ]
-let s:p.visual.left = [ [ s:blue, s:blackish ], [ s:green, s:blackish ], [ s:red, s:blackish ], [ s:lightgrey, s:blackish ] ]
-
-" Right
-let s:p.normal.right = [ [ s:lightgrey, s:blackish ], [ s:lightgrey, s:blackish ], [ s:lightgrey, s:blackish ] ]
-
-" Inactive
-let s:p.inactive.middle = [ [ s:lightgrey, s:darkgrey ] ]
-let s:p.inactive.right = [ [ s:darkgrey, s:darkgrey ], [ s:darkgrey, s:darkgrey ] ]
-
-" Errors & warnings
-let s:p.normal.error = [ [ s:red, s:blackish ] ]
-let s:p.normal.warning = [ [ s:yellow, s:blackish ] ]
-
-" Tabs
-let s:p.tabline.left = [ [ s:lightgrey, s:blackish ] ]
-let s:p.tabline.tabsel = [ [ s:blue, s:blackish ] ]
-
-" Set the palette
-let g:lightline#colorscheme#jellybeans#palette = lightline#colorscheme#flatten(s:p)
+  return ''
+endfunction
 
 " Lightline configs
 let g:lightline = {
-      \ 'colorscheme': 'dracula',
+      \ 'colorscheme': 'solarized',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch' ],
       \             [ 'readonly' ],
       \             [ 'relativepath', 'modified' ] ],
-      \   'right': [ [ 'cocstatus'],
+      \   'right': [ [ 'lspstatus'],
       \              [ 'lineinfo' ],
       \              [ 'percent' ],
       \              [ 'filetype', 'encodingformat' ] ],
       \ },
       \ 'component_function': {
-      \   'cocstatus': 'coc#status',
+      \   'lspstatus': 'LspStatus',
       \   'gitbranch': 'LightlineBranch',
       \   'mode': 'LightlineMode',
       \   'encodingformat': 'LightlineFileEncodingFormat',
