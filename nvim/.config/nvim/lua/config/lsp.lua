@@ -19,9 +19,9 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   buf_set_keymap('n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+  buf_set_keymap('n', '[g', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', ']g', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', '<leader>d', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
 
   -- Set some keybinds conditional on server capabilities
   if client.resolved_capabilities.document_formatting then
@@ -47,20 +47,31 @@ end
 
 -- Use a loop to conveniently both setup defined servers
 -- and map buffer local keybindings when the language server attaches
-local servers = { "pyright", "rust_analyzer", "tsserver", "gopls" }
+local servers = { "pyright", "rust_analyzer", "tsserver" }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
 
+nvim_lsp.gopls.setup{
+    on_attach = on_attach;
+    initializationOptions = {
+        completeUnimported = true,
+        usePlaceholders = true,
+        staticcheck = true,
+        gofumpt = true
+    };
+}
+
 require'lspconfig'.solargraph.setup {
-  cmd = { "solargraph", "stdio" };
-  filetypes = { "ruby" };
-  -- root_dir = root_pattern("Gemfile", ".git");
-  settings = { solargraph = {
-      diagnostics = true,
-      formatting = true,
-      autoformatting = true
-  } };
+    on_attach = on_attach;
+    cmd = { "solargraph", "stdio" };
+    filetypes = { "ruby" };
+    -- root_dir = root_pattern("Gemfile", ".git");
+    settings = { solargraph = {
+        diagnostics = true,
+        formatting = true,
+        autoformatting = true
+    } };
 }
 
 -- Call before saving go files to add/remove imports automatically

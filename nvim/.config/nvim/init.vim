@@ -7,14 +7,16 @@ call plug#begin('~/.vim/plugged')
     Plug 'brianclements/vim-lilypond'
     Plug 'bronson/vim-trailing-whitespace'
     Plug 'christoomey/vim-tmux-navigator'
+    Plug 'glepnir/galaxyline.nvim', { 'branch': 'main' }
     Plug 'hrsh7th/nvim-compe'
-    Plug 'itchyny/lightline.vim'
+    " Plug 'itchyny/lightline.vim'
     Plug 'janko/vim-test'
+    Plug 'joshdick/onedark.vim'
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
     Plug 'junegunn/fzf.vim'
-    Plug 'majutsushi/tagbar'
+    Plug 'kyazdani42/nvim-web-devicons'
     Plug 'lifepillar/vim-solarized8'
-    Plug 'nvim-lua/lsp-status.nvim'
+    Plug 'majutsushi/tagbar'
     Plug 'mhinz/vim-grepper'
     Plug 'mhinz/vim-signify'
     Plug 'mhinz/vim-startify'
@@ -41,7 +43,6 @@ set completeopt=menuone,noselect
 set cursorline
 set encoding=utf8
 set expandtab
-set fillchars+=vert:│
 set foldenable
 set foldexpr=nvim_treesitter#foldexpr()
 set foldlevelstart=99
@@ -128,116 +129,6 @@ autocmd FileType nerdtree setlocal nolist
 
 set laststatus=2
 
-lua << END
-    local lsp_status = require('lsp-status')
-    lsp_status.register_progress()
-    local lspconfig = require('lspconfig')
-END
-
-function! LspStatus() abort
-  if luaeval('#vim.lsp.buf_get_clients() > 0')
-    return luaeval("require('lsp-status').status()")
-  endif
-
-  return ''
-endfunction
-
-" Lightline configs
-let g:lightline = {
-      \ 'colorscheme': 'solarized',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch' ],
-      \             [ 'readonly' ],
-      \             [ 'relativepath', 'modified' ] ],
-      \   'right': [ [ 'lspstatus'],
-      \              [ 'lineinfo' ],
-      \              [ 'percent' ],
-      \              [ 'filetype', 'encodingformat' ] ],
-      \ },
-      \ 'component_function': {
-      \   'lspstatus': 'LspStatus',
-      \   'gitbranch': 'LightlineBranch',
-      \   'mode': 'LightlineMode',
-      \   'encodingformat': 'LightlineFileEncodingFormat',
-      \   'lineinfo': 'LightlineLineInfo',
-      \   'percent': 'LightlinePercent',
-      \   'filetype': 'LightlineFiletype',
-      \   'relativepath': 'LightlineRelativePath',
-      \   'modified': 'LightlineModified',
-      \   'readonly': 'LightlineReadonly',
-      \ },
-      \ 'subseparator': { 'left': '', 'right': '' },
-      \ }
-
-" Custom functions
-function! LightlineBranch()
-  if &ft == 'nerdtree'
-    return ''
-  endif
-  let branch = fugitive#head()
-  return branch !=# '' ? ' ' . branch : ''
-endfunction
-
-function! LightlineMode()
-  if &ft == 'nerdtree'
-    return '« NERD »'
-  endif
-  return '« ' . lightline#mode() . ' »'
-endfunction
-
-function! LightlineFileEncodingFormat()
-  if &ft == 'nerdtree'
-    return ''
-  endif
-  let encoding = &fenc!=#""?&fenc:&enc
-  let format = &ff
-  return encoding . '[' . format . ']'
-endfunction
-
-function! LightlineLineInfo()
-  if &ft == 'nerdtree'
-    return ''
-  endif
-  return line('.').':'. col('.')
-endfunction
-
-function! LightlinePercent()
-  if &ft == 'nerdtree'
-    return ''
-  endif
-  return line('.') * 100 / line('$') . '%'
-endfunction
-
-function! LightlineFiletype()
-  if &ft == 'nerdtree'
-    return ''
-  endif
-  return &ft !=# "" ? &ft : "no ft"
-endfunction
-
-function! LightlineRelativePath()
-  if &ft == 'nerdtree'
-    return ''
-  endif
-  return expand("%")
-endfunction
-
-function! LightlineModified()
-  if &ft == 'nerdtree'
-    return ''
-  endif
-  return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
-endfunction
-
-function! LightlineReadonly()
-  if &ft == 'nerdtree'
-    return ''
-  endif
-  return &ft !~? 'help' && &readonly ? 'RO' : ''
-endfunction
-
-
 let vim_markdown_preview_github=1
 let vim_markdown_preview_hotkey='<Leader>mp'
 
@@ -246,7 +137,8 @@ autocmd BufWritePre *.go lua lsp_organize_imports()
 autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync(nil, 1000)
 autocmd BufWritePre *.rb lua vim.lsp.buf.formatting_sync(nil, 1000)
 
-lua require('lsp')
+lua require('config.lsp')
+lua require('config.galaxyline')
 
 lua << EOF
     require'nvim-treesitter.configs'.setup {
@@ -293,6 +185,9 @@ let g:compe.source.spell = v:true
 let g:compe.source.treesitter = v:true
 let g:compe.source.omni = v:true
 let g:compe.source.ultisnips = v:true
+
+inoremap <silent><expr> <C-Space> compe#complete()
+inoremap <silent><expr> <C-y>      compe#confirm('<CR>')
 
 let g:fzf_layout = { 'down': '~30%' }
 let g:fzf_buffers_jump = 1
