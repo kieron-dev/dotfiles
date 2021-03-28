@@ -18,7 +18,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'lifepillar/vim-solarized8'
     Plug 'majutsushi/tagbar'
     Plug 'mhinz/vim-grepper'
-    Plug 'mhinz/vim-signify'
+    Plug 'nvim-lua/plenary.nvim'
+    Plug 'lewis6991/gitsigns.nvim'
     Plug 'mhinz/vim-startify'
     Plug 'milkypostman/vim-togglelist'
     Plug 'mtth/scratch.vim'
@@ -58,6 +59,7 @@ set noshowmode
 set number
 set shiftwidth=4
 set showmatch
+set signcolumn=yes:1
 set smartcase
 set softtabstop=4
 set splitbelow
@@ -100,6 +102,19 @@ vnoremap < <gv
 " =======================================================================================
 " =============================== PLUGIN CONFIGURATIONS =================================
 " =======================================================================================
+"
+lua << EOF
+require('gitsigns').setup {
+  signs = {
+    add          = {hl = 'DiffAdd'   , text = '│', numhl='GitSignsAddNr'},
+    change       = {hl = 'DiffChange', text = '│', numhl='GitSignsChangeNr'},
+    delete       = {hl = 'DiffDelete', text = '_', numhl='GitSignsDeleteNr'},
+    topdelete    = {hl = 'DiffDelete', text = '‾', numhl='GitSignsDeleteNr'},
+    changedelete = {hl = 'DiffChange', text = '~', numhl='GitSignsChangeNr'},
+  },
+  numhl = false,
+}
+EOF
 
 function! NERDTreeToggleAndFind()
   if (exists('t:NERDTreeBufName') && bufwinnr(t:NERDTreeBufName) != -1)
@@ -133,7 +148,7 @@ let vim_markdown_preview_github=1
 let vim_markdown_preview_hotkey='<Leader>mp'
 
 nnoremap <cr> :w<cr>
-autocmd BufWritePre *.go lua lsp_organize_imports()
+autocmd BufWritePre *.go lua LSP_organize_imports()
 autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync(nil, 1000)
 autocmd BufWritePre *.rb lua vim.lsp.buf.formatting_sync(nil, 1000)
 
@@ -160,12 +175,12 @@ let g:UltiSnipsJumpBackwardTrigger = '<c-k>'
 
 let g:compe = {}
 let g:compe.enabled = v:true
-let g:compe.autocomplete = v:true
+" let g:compe.autocomplete = v:true
 let g:compe.debug = v:false
 let g:compe.min_length = 1
-let g:compe.preselect = 'enable'
-let g:compe.throttle_time = 80
-let g:compe.source_timeout = 200
+let g:compe.preselect = 'disable'
+" let g:compe.throttle_time = 80
+" let g:compe.source_timeout = 200
 let g:compe.incomplete_delay = 400
 let g:compe.max_abbr_width = 100
 let g:compe.max_kind_width = 100
@@ -175,19 +190,15 @@ let g:compe.documentation = v:true
 let g:compe.source = {}
 let g:compe.source.path = v:true
 let g:compe.source.buffer = v:true
-" let g:compe.source.calc = v:true
-" let g:compe.source.vsnip = v:true
 let g:compe.source.nvim_lsp = v:true
-let g:compe.source.nvim_lua = v:true
-let g:compe.source.spell = v:true
-" let g:compe.source.tags = v:true
-" let g:compe.source.snippets_nvim = v:true
-let g:compe.source.treesitter = v:true
 let g:compe.source.omni = v:true
 let g:compe.source.ultisnips = v:true
 
 inoremap <silent><expr> <C-Space> compe#complete()
-inoremap <silent><expr> <C-y>      compe#confirm('<CR>')
+inoremap <silent><expr> <CR>     compe#confirm('<CR>')
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+inoremap <silent><expr> <C-n>     compe#scroll({ 'delta': +4 })
+inoremap <silent><expr> <C-p>     compe#scroll({ 'delta': -4 })
 
 let g:fzf_layout = { 'down': '~30%' }
 let g:fzf_buffers_jump = 1

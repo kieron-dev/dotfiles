@@ -87,7 +87,7 @@ gls.left = {
     },
     {
         FileName = {
-            provider = 'SFileName',
+            provider = 'FileName',
             condition = condition.buffer_not_empty,
             highlight = { colors.fg, colors.section_bg },
             separator = "  ",
@@ -196,6 +196,7 @@ gls.right= {
             provider = 'FileFormat',
             highlight = {colors.cyan,colors.bg},
             separator = ' ',
+            separator_highlight = { colors.section_bg, colors.bg },
         }
     },
     {
