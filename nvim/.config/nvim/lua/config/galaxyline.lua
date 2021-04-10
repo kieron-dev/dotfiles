@@ -62,10 +62,10 @@ gls.short_line_left = {
 
 gls.left = {
     {
-      Start = {
-        provider = function() return '▊ ' end,
-        highlight = {colors.fg,colors.bg},
-      },
+        Start = {
+            provider = function() return '▊ ' end,
+            highlight = {colors.fg,colors.bg},
+        },
     },
     {
         ViMode = {

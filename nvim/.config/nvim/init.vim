@@ -8,8 +8,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'bronson/vim-trailing-whitespace'
     Plug 'christoomey/vim-tmux-navigator'
     Plug 'glepnir/galaxyline.nvim', { 'branch': 'main' }
-    Plug 'hrsh7th/nvim-compe'
-    " Plug 'itchyny/lightline.vim'
+    Plug 'nvim-lua/completion-nvim'
+    Plug 'steelsojka/completion-buffers'
     Plug 'janko/vim-test'
     Plug 'joshdick/onedark.vim'
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -19,7 +19,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'majutsushi/tagbar'
     Plug 'mhinz/vim-grepper'
     Plug 'nvim-lua/plenary.nvim'
-    Plug 'lewis6991/gitsigns.nvim'
+    Plug 'mhinz/vim-signify'
     Plug 'mhinz/vim-startify'
     Plug 'milkypostman/vim-togglelist'
     Plug 'mtth/scratch.vim'
@@ -40,7 +40,7 @@ call plug#end()
 let mapleader=' '
 let maplocalleader='\'
 
-set completeopt=menuone,noselect
+set completeopt=menuone,noselect,noinsert
 set cursorline
 set encoding=utf8
 set expandtab
@@ -103,19 +103,6 @@ vnoremap < <gv
 " =============================== PLUGIN CONFIGURATIONS =================================
 " =======================================================================================
 "
-lua << EOF
-require('gitsigns').setup {
-  signs = {
-    add          = {hl = 'DiffAdd'   , text = '│', numhl='GitSignsAddNr'},
-    change       = {hl = 'DiffChange', text = '│', numhl='GitSignsChangeNr'},
-    delete       = {hl = 'DiffDelete', text = '_', numhl='GitSignsDeleteNr'},
-    topdelete    = {hl = 'DiffDelete', text = '‾', numhl='GitSignsDeleteNr'},
-    changedelete = {hl = 'DiffChange', text = '~', numhl='GitSignsChangeNr'},
-  },
-  numhl = false,
-}
-EOF
-
 function! NERDTreeToggleAndFind()
   if (exists('t:NERDTreeBufName') && bufwinnr(t:NERDTreeBufName) != -1)
     execute ':NERDTreeClose'
@@ -173,32 +160,15 @@ let g:UltiSnipsExpandTrigger = '<c-j>'
 let g:UltiSnipsJumpForwardTrigger = '<c-j>'
 let g:UltiSnipsJumpBackwardTrigger = '<c-k>'
 
-let g:compe = {}
-let g:compe.enabled = v:true
-" let g:compe.autocomplete = v:true
-let g:compe.debug = v:false
-let g:compe.min_length = 1
-let g:compe.preselect = 'disable'
-" let g:compe.throttle_time = 80
-" let g:compe.source_timeout = 200
-let g:compe.incomplete_delay = 400
-let g:compe.max_abbr_width = 100
-let g:compe.max_kind_width = 100
-let g:compe.max_menu_width = 100
-let g:compe.documentation = v:true
 
-let g:compe.source = {}
-let g:compe.source.path = v:true
-let g:compe.source.buffer = v:true
-let g:compe.source.nvim_lsp = v:true
-let g:compe.source.omni = v:true
-let g:compe.source.ultisnips = v:true
-
-inoremap <silent><expr> <C-Space> compe#complete()
-inoremap <silent><expr> <CR>     compe#confirm('<CR>')
-inoremap <silent><expr> <C-e>     compe#close('<C-e>')
-inoremap <silent><expr> <C-n>     compe#scroll({ 'delta': +4 })
-inoremap <silent><expr> <C-p>     compe#scroll({ 'delta': -4 })
+autocmd BufEnter * lua require'completion'.on_attach()
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+let g:completion_chain_complete_list = [
+    \{'complete_items': ['lsp', 'snippet', 'buffers']},
+    \{'mode': '<c-p>'},
+    \{'mode': '<c-n>'}
+\]
 
 let g:fzf_layout = { 'down': '~30%' }
 let g:fzf_buffers_jump = 1
