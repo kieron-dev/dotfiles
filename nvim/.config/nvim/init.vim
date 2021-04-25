@@ -71,7 +71,7 @@ set undofile
 set wildmenu
 set wildmode=longest,list:longest
 
-colorscheme solarized8_high
+colorscheme onedark
 
 nmap <silent> <leader>ve :edit ~/.config/nvim/init.vim<CR>
 nmap <silent> <leader>vs :source ~/.config/nvim/init.vim<CR>
@@ -133,8 +133,9 @@ set laststatus=2
 
 let vim_markdown_preview_github=1
 let vim_markdown_preview_hotkey='<Leader>mp'
+let vim_markdown_preview_browser='Firefox'
 
-nnoremap <cr> :w<cr>
+nnoremap <unique> <expr> <CR> empty(&buftype) ? ':w<CR>' : '<CR>'
 autocmd BufWritePre *.go lua LSP_organize_imports()
 autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync(nil, 1000)
 autocmd BufWritePre *.rb lua vim.lsp.buf.formatting_sync(nil, 1000)
@@ -144,7 +145,7 @@ lua require('config.galaxyline')
 
 lua << EOF
     require'nvim-treesitter.configs'.setup {
-      ensure_installed = {"go", "ruby", "c", "bash", "lua", "yaml", "javascript"}, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+      ensure_installed = {"go", "ruby", "c", "bash", "lua", "yaml", "javascript", "html"}, -- one of "all", "maintained" (parsers with maintainers), or a list of languages
       highlight = {
         enable = true,              -- false will disable the whole extension
         -- disable = { "c", "rust" },  -- list of language that will be disabled
