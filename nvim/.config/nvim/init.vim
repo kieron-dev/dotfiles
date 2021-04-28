@@ -1,6 +1,9 @@
 call plug#begin('~/.vim/plugged')
     Plug 'junegunn/vim-plug'
 
+    Plug 'prettier/vim-prettier', {
+      \ 'do': 'yarn install',
+      \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
     Plug 'JamshedVesuna/vim-markdown-preview'
     Plug 'SirVer/ultisnips'
     Plug 'benmills/vimux'
@@ -173,6 +176,9 @@ let g:completion_chain_complete_list = [
 
 let g:fzf_layout = { 'down': '~30%' }
 let g:fzf_buffers_jump = 1
+
+let g:prettier#autoformat = 1
+let g:prettier#autoformat_require_pragma = 0
 
 augroup fzf
   autocmd!
