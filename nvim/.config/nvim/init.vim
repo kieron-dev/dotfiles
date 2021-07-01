@@ -11,8 +11,6 @@ call plug#begin('~/.vim/plugged')
     Plug 'bronson/vim-trailing-whitespace'
     Plug 'christoomey/vim-tmux-navigator'
     Plug 'glepnir/galaxyline.nvim', { 'branch': 'main' }
-    Plug 'nvim-lua/completion-nvim'
-    Plug 'steelsojka/completion-buffers'
     Plug 'janko/vim-test'
     Plug 'joshdick/onedark.vim'
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -36,14 +34,12 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-rhubarb'
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-unimpaired'
-    Plug 'trayo/vim-ginkgo-snippets'
-    Plug 'trayo/vim-gomega-snippets'
 call plug#end()
 
 let mapleader=' '
 let maplocalleader='\'
 
-set completeopt=menuone,noselect,noinsert
+set completeopt=menuone
 set cursorline
 set encoding=utf8
 set expandtab
@@ -163,16 +159,6 @@ EOF
 let g:UltiSnipsExpandTrigger = '<c-j>'
 let g:UltiSnipsJumpForwardTrigger = '<c-j>'
 let g:UltiSnipsJumpBackwardTrigger = '<c-k>'
-
-
-autocmd BufEnter * lua require'completion'.on_attach()
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-let g:completion_chain_complete_list = [
-    \{'complete_items': ['lsp', 'snippet', 'buffers']},
-    \{'mode': '<c-p>'},
-    \{'mode': '<c-n>'}
-\]
 
 let g:fzf_layout = { 'down': '~30%' }
 let g:fzf_buffers_jump = 1
