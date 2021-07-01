@@ -98,7 +98,6 @@ require'lspconfig'.solargraph.setup {
 
 -- Call before saving go files to add/remove imports automatically
 function LSP_organize_imports()
-    print "hello"
     local context = { source = { organizeImports = true } }
     vim.validate { context = { context, "t", true } }
 
