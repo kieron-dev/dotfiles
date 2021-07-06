@@ -11,6 +11,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'bronson/vim-trailing-whitespace'
     Plug 'christoomey/vim-tmux-navigator'
     Plug 'glepnir/galaxyline.nvim', { 'branch': 'main' }
+    Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
     Plug 'janko/vim-test'
     Plug 'joshdick/onedark.vim'
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
