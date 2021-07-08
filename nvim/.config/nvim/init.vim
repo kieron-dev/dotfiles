@@ -1,42 +1,4 @@
-call plug#begin('~/.vim/plugged')
-    Plug 'junegunn/vim-plug'
-
-    Plug 'prettier/vim-prettier', {
-      \ 'do': 'yarn install',
-      \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
-    Plug 'JamshedVesuna/vim-markdown-preview'
-    Plug 'SirVer/ultisnips'
-    Plug 'benmills/vimux'
-    Plug 'brianclements/vim-lilypond'
-    Plug 'bronson/vim-trailing-whitespace'
-    Plug 'christoomey/vim-tmux-navigator'
-    Plug 'glepnir/galaxyline.nvim', { 'branch': 'main' }
-    Plug 'glepnir/lspsaga.nvim', { 'branch': 'main' }
-    Plug 'hrsh7th/nvim-compe'
-    Plug 'janko/vim-test'
-    Plug 'joshdick/onedark.vim'
-    Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-    Plug 'junegunn/fzf.vim'
-    Plug 'kyazdani42/nvim-web-devicons'
-    Plug 'lifepillar/vim-solarized8'
-    Plug 'majutsushi/tagbar'
-    Plug 'mhinz/vim-grepper'
-    Plug 'nvim-lua/plenary.nvim'
-    Plug 'mhinz/vim-signify'
-    Plug 'mhinz/vim-startify'
-    Plug 'milkypostman/vim-togglelist'
-    Plug 'mtth/scratch.vim'
-    Plug 'neovim/nvim-lspconfig'
-    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-    Plug 'scrooloose/nerdtree'
-    Plug 'tpope/vim-commentary'
-    Plug 'tpope/vim-eunuch'
-    Plug 'tpope/vim-fugitive'
-    Plug 'tpope/vim-repeat'
-    Plug 'tpope/vim-rhubarb'
-    Plug 'tpope/vim-surround'
-    Plug 'tpope/vim-unimpaired'
-call plug#end()
+lua require('plugins')
 
 let mapleader=' '
 let maplocalleader='\'
