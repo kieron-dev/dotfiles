@@ -31,7 +31,10 @@ return require('packer').startup(function(use)
     }
     use 'hrsh7th/nvim-compe'
     use 'janko/vim-test'
-    use 'joshdick/onedark.vim'
+    use {
+        'joshdick/onedark.vim',
+        branch = 'main'
+    }
     use 'junegunn/fzf'
     use 'junegunn/fzf.vim'
     use 'kyazdani42/nvim-web-devicons'
