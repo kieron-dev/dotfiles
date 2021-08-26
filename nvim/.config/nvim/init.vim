@@ -108,9 +108,8 @@ let vim_markdown_preview_hotkey='<Leader>mp'
 let vim_markdown_preview_browser='Firefox'
 
 nnoremap <unique> <expr> <CR> empty(&buftype) ? ':w<CR>' : '<CR>'
-autocmd BufWritePre *.go lua LSP_organize_imports()
-autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync(nil, 1000)
-autocmd BufWritePre *.rb lua vim.lsp.buf.formatting_sync(nil, 1000)
+autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync(nil, 10000); LSP_organize_imports()
+autocmd BufWritePre *.rb lua vim.lsp.buf.formatting_sync(nil, 3000)
 
 lua require('config.lsp')
 lua require('config.galaxyline')
