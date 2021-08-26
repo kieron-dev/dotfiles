@@ -45,8 +45,8 @@ autocmd BufReadPost *
     \   execute "normal! g`\"" |
     \ endif
 
-nmap <silent> <leader>ve :edit ~/.config/nvim/init.vim<CR>
-nmap <silent> <leader>vs :source ~/.config/nvim/init.vim<CR>
+nmap <silent> <leader>ve :edit $MYVIMRC<CR>
+nmap <silent> <leader>vs :source $MYVIMRC<CR>
 
 nnoremap <silent> <leader>ss :Grepper -tool rg<cr>
 
