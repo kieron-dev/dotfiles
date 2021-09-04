@@ -29,7 +29,7 @@ return require('packer').startup(function(use)
         'glepnir/lspsaga.nvim',
         branch = 'main'
     }
-    use 'hrsh7th/nvim-compe'
+    use 'nvim-lua/completion-nvim'
     use 'janko/vim-test'
     use {
         'joshdick/onedark.vim',

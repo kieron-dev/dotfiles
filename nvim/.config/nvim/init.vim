@@ -3,14 +3,19 @@ lua require('plugins')
 let mapleader=' '
 let maplocalleader='\'
 
-set completeopt=menuone,noselect
 set cursorline
 set encoding=utf8
+
 set expandtab
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
+
 set foldenable
 set foldexpr=nvim_treesitter#foldexpr()
 set foldlevelstart=99
 set foldmethod=expr
+
 set hidden
 set hlsearch
 set inccommand=nosplit
@@ -20,24 +25,26 @@ set maxmempattern=2000
 set mouse=a
 set noshowmode
 set number
-set shiftwidth=4
 set showmatch
 set signcolumn=yes:1
 set smartcase
-set softtabstop=4
 set splitbelow
 set splitright
-set tabstop=4
 set termguicolors
 set textwidth=0
 set undofile
-set wildmenu
-set wildmode=longest,list:longest
+" set wildmenu
+" set wildmode=longest,list:longest
 
 colorscheme onedark
 
-" compe
-lua require 'config.compe'
+" completion-nvim
+set completeopt=menuone,noinsert,noselect
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+set shortmess+=c
+let g:completion_enable_snippet = 'UltiSnips'
+autocmd BufEnter * lua require'completion'.on_attach()
 
 " restore file cursor position
 autocmd BufReadPost *
