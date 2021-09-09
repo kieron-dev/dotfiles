@@ -96,6 +96,11 @@ require('lspconfig').sumneko_lua.setup({
     on_attach = on_attach
 })
 
+require'lspconfig'.java_language_server.setup({
+    on_attach = on_attach;
+    cmd = {"/home/vagrant/src/java-language-server/dist/lang_server_linux.sh"};
+})
+
 require'lspconfig'.solargraph.setup {
     on_attach = on_attach;
     cmd = { "solargraph", "stdio" };
