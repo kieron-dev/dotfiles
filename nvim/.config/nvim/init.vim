@@ -200,3 +200,5 @@ nnoremap <silent> <leader>tg :TestVisit<cr>
 
 nmap <silent> <leader>gh :Gbrowse<cr>
 vmap <silent> <leader>gh :Gbrowse<cr>
+
+nnoremap <silent> <F8> :TagbarToggle<cr>
