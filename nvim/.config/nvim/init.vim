@@ -46,6 +46,10 @@ set shortmess+=c
 let g:completion_enable_snippet = 'UltiSnips'
 autocmd BufEnter * lua require'completion'.on_attach()
 
+" trigger CursorHold in 500ms and show error popup if error on line
+set updatetime=500
+autocmd CursorHold * Lspsaga show_line_diagnostics
+
 " restore file cursor position
 autocmd BufReadPost *
     \ if line("'\"") > 1 && line("'\"") <= line("$") |
