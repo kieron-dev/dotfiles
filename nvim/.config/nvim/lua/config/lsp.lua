@@ -36,7 +36,8 @@ local on_attach = function(client, bufnr)
     buf_set_keymap('n', '<leader>e', ':Lspsaga show_line_diagnostics<CR>', opts)
     buf_set_keymap('n', '[g', ':Lspsaga diagnostic_jump_prev<CR>', opts)
     buf_set_keymap('n', ']g', ':Lspsaga diagnostic_jump_next<CR>', opts)
-    buf_set_keymap('n', '<leader>d', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+    buf_set_keymap('n', '<leader>db', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+    buf_set_keymap('n', '<leader>da', '<cmd>lua vim.lsp.diagnostic.set_loclist({workspace = true})<CR>', opts)
 
     -- Set some keybinds conditional on server capabilities
     if client.resolved_capabilities.document_formatting then
