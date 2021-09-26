@@ -50,6 +50,10 @@ autocmd BufEnter * lua require'completion'.on_attach()
 set updatetime=500
 autocmd CursorHold * Lspsaga show_line_diagnostics
 
+" shfmt scripts - use 2 spaces for indent, and fmt on save
+let g:shfmt_fmt_on_save = 1
+let g:shfmt_extra_args = '-i 2'
+
 " restore file cursor position
 autocmd BufReadPost *
     \ if line("'\"") > 1 && line("'\"") <= line("$") |
