@@ -81,7 +81,8 @@ nvim_lsp.gopls.setup{
         }
     };
 }
-local sumneko_root_path = '/home/kieron/src/lua-language-server'
+
+local sumneko_root_path = vim.env.HOME..'/src/lua-language-server'
 local sumneko_binary = sumneko_root_path.."/bin/Linux/lua-language-server"
 
 require('lspconfig').sumneko_lua.setup({
