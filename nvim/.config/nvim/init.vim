@@ -352,7 +352,7 @@ nnoremap <silent> <leader>tf :TestFile<cr>
 nnoremap <silent> <leader>ts :TestSuite<cr>
 nnoremap <silent> <leader>tg :TestVisit<cr>
 
-nmap <silent> <leader>gh :Gbrowse<cr>
-vmap <silent> <leader>gh :Gbrowse<cr>
+nmap <silent> <leader>gh :GBrowse<cr>
+vmap <silent> <leader>gh :GBrowse<cr>
 
 nnoremap <silent> <F8> :TagbarToggle<cr>
