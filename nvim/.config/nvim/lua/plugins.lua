@@ -21,10 +21,7 @@ return require('packer').startup(function(use)
     use 'brianclements/vim-lilypond'
     use 'bronson/vim-trailing-whitespace'
     use 'christoomey/vim-tmux-navigator'
-    use {
-        'glepnir/galaxyline.nvim',
-        branch = 'main'
-    }
+    use 'itchyny/lightline.vim'
     use {
         'glepnir/lspsaga.nvim',
         branch = 'main'
@@ -41,6 +38,7 @@ return require('packer').startup(function(use)
     use 'lifepillar/vim-solarized8'
     use 'majutsushi/tagbar'
     use 'mhinz/vim-grepper'
+    use 'nvim-lua/lsp-status.nvim'
     use 'nvim-lua/plenary.nvim'
     use 'mhinz/vim-signify'
     use 'mhinz/vim-startify'

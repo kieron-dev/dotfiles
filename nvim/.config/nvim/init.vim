@@ -127,7 +127,153 @@ autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync(nil, 10000); LSP_organi
 autocmd BufWritePre *.rb lua vim.lsp.buf.formatting_sync(nil, 3000)
 
 lua require('config.lsp')
-lua require('config.galaxyline')
+
+" --------------------------------- Lightline --------------------------------
+
+" Show statusline
+set laststatus=2
+
+" Colors
+let s:green = [ '#99ad6a', 107 ]
+let s:red = [ '#dd1c1c', 167 ]
+let s:yellow = [ '#ffb964', 215 ]
+let s:blue = [ '#6A95EA', 103, 'bold' ]
+let s:lightgrey = [ '#999494', 'none' ]
+let s:blackish = [ '#1c1c1c', 'none' ]
+let s:darkgrey = [ '#282525', 'none' ]
+
+let s:p = {'normal': {}, 'inactive': {}, 'insert': {}, 'replace': {}, 'visual': {}, 'tabline': {}}
+
+" Middle
+let s:p.normal.middle = [ [ s:lightgrey, s:blackish ] ]
+
+" Left
+let s:p.normal.left = [ [ s:blue, s:blackish ], [ s:green, s:blackish ], [ s:red, s:blackish ], [ s:lightgrey, s:blackish ] ]
+let s:p.insert.left = [ [ s:blue, s:blackish ], [ s:green, s:blackish ], [ s:red, s:blackish ], [ s:lightgrey, s:blackish ] ]
+let s:p.replace.left = [ [ s:blue, s:blackish ], [ s:green, s:blackish ], [ s:red, s:blackish ], [ s:lightgrey, s:blackish ] ]
+let s:p.visual.left = [ [ s:blue, s:blackish ], [ s:green, s:blackish ], [ s:red, s:blackish ], [ s:lightgrey, s:blackish ] ]
+
+" Right
+let s:p.normal.right = [ [ s:lightgrey, s:blackish ], [ s:lightgrey, s:blackish ], [ s:lightgrey, s:blackish ] ]
+
+" Inactive
+let s:p.inactive.middle = [ [ s:lightgrey, s:darkgrey ] ]
+let s:p.inactive.right = [ [ s:darkgrey, s:darkgrey ], [ s:darkgrey, s:darkgrey ] ]
+
+" Errors & warnings
+let s:p.normal.error = [ [ s:red, s:blackish ] ]
+let s:p.normal.warning = [ [ s:yellow, s:blackish ] ]
+
+" Tabs
+let s:p.tabline.left = [ [ s:lightgrey, s:blackish ] ]
+let s:p.tabline.tabsel = [ [ s:blue, s:blackish ] ]
+
+" Set the palette
+let g:lightline#colorscheme#onedark#palette = lightline#colorscheme#flatten(s:p)
+
+" Lightline configs
+let g:lightline = {
+      \ 'colorscheme': 'onedark',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch' ],
+      \             [ 'readonly' ],
+      \             [ 'relativepath', 'modified' ] ],
+      \   'right': [ [ 'lspstatus' ],
+      \              [ 'lineinfo' ],
+      \              [ 'percent' ],
+      \              [ 'filetype', 'encodingformat' ] ],
+      \ },
+      \ 'component_function': {
+      \   'lspstatus': 'LspStatus',
+      \   'gitbranch': 'LightlineBranch',
+      \   'mode': 'LightlineMode',
+      \   'encodingformat': 'LightlineFileEncodingFormat',
+      \   'lineinfo': 'LightlineLineInfo',
+      \   'percent': 'LightlinePercent',
+      \   'filetype': 'LightlineFiletype',
+      \   'relativepath': 'LightlineRelativePath',
+      \   'modified': 'LightlineModified',
+      \   'readonly': 'LightlineReadonly',
+      \ },
+      \ 'subseparator': { 'left': '', 'right': '' },
+      \ }
+
+" Custom functions
+function! LspStatus() abort
+  if luaeval('#vim.lsp.buf_get_clients() > 0')
+    return luaeval("require('lsp-status').status()")
+  endif
+
+  return ''
+endfunction
+
+function! LightlineBranch()
+  if &ft == 'nerdtree'
+    return ''
+  endif
+  let branch = fugitive#head()
+  return branch !=# '' ? ' ' . branch : ''
+endfunction
+
+function! LightlineMode()
+  if &ft == 'nerdtree'
+    return '« NERD »'
+  endif
+  return '« ' . lightline#mode() . ' »'
+endfunction
+
+function! LightlineFileEncodingFormat()
+  if &ft == 'nerdtree'
+    return ''
+  endif
+  let encoding = &fenc!=#""?&fenc:&enc
+  let format = &ff
+  return encoding . '[' . format . ']'
+endfunction
+
+function! LightlineLineInfo()
+  if &ft == 'nerdtree'
+    return ''
+  endif
+  return line('.').':'. col('.')
+endfunction
+
+function! LightlinePercent()
+  if &ft == 'nerdtree'
+    return ''
+  endif
+  return line('.') * 100 / line('$') . '%'
+endfunction
+
+function! LightlineFiletype()
+  if &ft == 'nerdtree'
+    return ''
+  endif
+  return &ft !=# "" ? &ft : "no ft"
+endfunction
+
+function! LightlineRelativePath()
+  if &ft == 'nerdtree'
+    return ''
+  endif
+  return expand('%:f')
+endfunction
+
+function! LightlineModified()
+  if &ft == 'nerdtree'
+    return ''
+  endif
+  return &ft =~ 'help' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+endfunction
+
+function! LightlineReadonly()
+  if &ft == 'nerdtree'
+    return ''
+  endif
+  return &ft !~? 'help' && &readonly ? 'RO' : ''
+endfunction
+" --------------------------------------------------------------------------
 
 lua << EOF
     require'nvim-treesitter.configs'.setup {

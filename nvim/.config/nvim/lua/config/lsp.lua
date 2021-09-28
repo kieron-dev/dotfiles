@@ -1,6 +1,17 @@
-local nvim_lsp = require('lspconfig')
+local nvim_lsp = require 'lspconfig'
+local lsp_status = require 'lsp-status'
+local saga = require'lspsaga'
 
-local saga = require 'lspsaga'
+lsp_status.config{
+    status_symbol = '',
+    current_function = false,
+    indicator_errors = '❌',
+    indicator_warnings = '⚠',
+    indicator_info = 'ℹ',
+    indicator_hint = '💡',
+    indicator_ok = '✔️',
+}
+lsp_status.register_progress()
 saga.init_lsp_saga()
 
 -- disable inline diagnostics
@@ -45,18 +56,21 @@ local on_attach = function(client, bufnr)
     elseif client.resolved_capabilities.document_range_formatting then
         buf_set_keymap("n", "<space>ff", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
     end
+
+    lsp_status.on_attach(client)
 end
 
 -- Use a loop to conveniently both setup defined servers
 -- and map buffer local keybindings when the language server attaches
 local servers = { "tsserver", "bashls" }
 for _, lsp in ipairs(servers) do
-    nvim_lsp[lsp].setup { on_attach = on_attach }
+    nvim_lsp[lsp].setup { on_attach = on_attach, capabilities = lsp_status.capabilities }
 end
 
 nvim_lsp.gopls.setup{
     on_attach = on_attach;
-    cmd = { 'gopls', '--remote=auto' },
+    capabilities = lsp_status.capabilities;
+    cmd = { 'gopls', '--remote=auto' };
     settings = {
         gopls = {
             completeUnimported = true,
@@ -94,18 +108,21 @@ require('lspconfig').sumneko_lua.setup({
                 },
             },
         }
-    },
+    };
 
-    on_attach = on_attach
+    on_attach = on_attach;
+    capabilities = lsp_status.capabilities;
 })
 
 require'lspconfig'.java_language_server.setup({
     on_attach = on_attach;
-    cmd = {"/home/vagrant/src/java-language-server/dist/lang_server_linux.sh"};
+    capabilities = lsp_status.capabilities;
+    cmd = {vim.env.HOME.."/src/java-language-server/dist/lang_server_linux.sh"};
 })
 
 require'lspconfig'.solargraph.setup {
     on_attach = on_attach;
+    capabilities = lsp_status.capabilities;
     cmd = { "solargraph", "stdio" };
     filetypes = { "ruby" };
     -- root_dir = root_pattern("Gemfile", ".git");
