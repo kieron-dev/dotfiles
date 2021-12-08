@@ -1,0 +1,60 @@
+[user]
+	name = Kieron Browne
+	email = kieron.browne@gmail.com
+[alias]
+  cleanup = !git checkout master && git pull && git branch  --merged  master | grep -v 'master$' | xargs  git  branch  -d
+  unstage = reset HEAD
+  st = status
+  br = branch
+  ci = commit --verbose
+  co = checkout
+  ca = commit --amend --reset-author --verbose
+  cleanup = !git checkout master && git
+  st = status
+  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  lga = log --graph --topo-order --date=short --abbrev-commit --decorate --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn]%Creset %Cblue%G?%Creset' --all
+  lol = log --graph --decorate --oneline
+  lola = log --graph --decorate --oneline --all
+  di = diff
+  df = diff
+  dc = diff --cached
+  ds = diff --staged
+[apply]
+  whitespace = nowarn
+[core]
+  editor = /usr/bin/nvim
+  hooksPath = ~/workspace/git-hooks-core
+[push]
+  default = current
+[color "status"]
+  added = green
+  changed = yellow
+  untracked = cyan
+[color]
+  ui = auto
+[diff]
+  wordRegex = [^[:space:]]
+  algorithm = patience
+[help]
+  autocorrect = 1
+[advice]
+  statusHints = false
+[branch]
+  autosetuprebase = always
+[fetch]
+  prune = true
+[pull]
+  rebase = true
+[rebase]
+  autostash = true
+[rerere]
+  enabled = true
+[http "https://gopkg.in"]
+  followRedirects = true
+[commit]
+  verbose = true
+  ; template = ~/.gitmessage
+[url "git@github.com:"]
+  pushInsteadOf = https://github.com/
+[merge]
+  conflictstyle = diff3
