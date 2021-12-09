@@ -49,7 +49,7 @@ call plug#begin('~/.vim/plugged')
     " lsp auto completions
     Plug 'nvim-lua/completion-nvim'
     " lsp status helper
-    Plug 'nvim-lua/lsp-status.nvim'
+    Plug 'nvim-lua/lsp-status.nvim', { 'commit': 'e8e5303f9ee3d8dc327c97891eaa1257ba5d4eee' }
     " use built-in syntax highlighting engine
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     " ANSI escape sequences concealed, but highlighted as specified
