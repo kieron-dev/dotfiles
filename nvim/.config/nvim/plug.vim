@@ -19,7 +19,7 @@ call plug#begin('~/.vim/plugged')
     " Navigate through vim splits seamlessly
     Plug 'christoomey/vim-tmux-navigator'
     " popup windows for LSP helpers
-    Plug 'glepnir/lspsaga.nvim'
+    Plug 'tami5/lspsaga.nvim'
     " Light and configurable statusline
     Plug 'itchyny/lightline.vim'
     " Preview markdown files in the browser
@@ -47,9 +47,14 @@ call plug#begin('~/.vim/plugged')
     " Config for built-in nvim lsp
     Plug 'neovim/nvim-lspconfig'
     " lsp auto completions
-    Plug 'nvim-lua/completion-nvim'
+    Plug 'hrsh7th/nvim-cmp'
+    " LSP source for nvim-cmp
+    Plug 'hrsh7th/cmp-nvim-lsp'
+    " Snippets source for nvim-cmp
+    Plug 'quangnguyen30192/cmp-nvim-ultisnips'
+
     " lsp status helper
-    Plug 'nvim-lua/lsp-status.nvim', { 'commit': 'e8e5303f9ee3d8dc327c97891eaa1257ba5d4eee' }
+    Plug 'nvim-lua/lsp-status.nvim'
     " use built-in syntax highlighting engine
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     " ANSI escape sequences concealed, but highlighted as specified

@@ -39,16 +39,22 @@ local on_attach = function(client, bufnr)
     buf_set_keymap('n', '<leader>ea', '<cmd>lua vim.lsp.diagnostic.set_loclist({workspace = true})<CR>', opts)
 end
 
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+
 -- Use a loop to conveniently both setup defined servers
 -- and map buffer local keybindings when the language server attaches
 local servers = { "tsserver", "bashls" }
 for _, lsp in ipairs(servers) do
-    nvim_lsp[lsp].setup { on_attach = on_attach }
+    nvim_lsp[lsp].setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+    }
 end
 
 nvim_lsp.gopls.setup{
-    on_attach = on_attach;
-    cmd = { 'gopls', '--remote=auto' };
+    on_attach = on_attach,
+    cmd = { 'gopls', '--remote=auto' },
     settings = {
         gopls = {
             completeUnimported = true,
@@ -57,7 +63,52 @@ nvim_lsp.gopls.setup{
             gofumpt = true,
             buildFlags = {"-tags=e2e"},
         }
-    };
+    },
+    capabilities = capabilities,
+}
+
+-- nvim-cmp setup
+local cmp = require 'cmp'
+cmp.setup {
+    snippet = {
+      expand = function(args)
+        vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+      end,
+    },
+  mapping = {
+    ['<C-p>'] = cmp.mapping.select_prev_item(),
+    ['<C-n>'] = cmp.mapping.select_next_item(),
+    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-l>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.close(),
+    ['<CR>'] = cmp.mapping.confirm {
+      behavior = cmp.ConfirmBehavior.Replace,
+      select = true,
+    },
+    ['<Tab>'] = function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      -- elseif luasnip.expand_or_jumpable() then
+      --   luasnip.expand_or_jump()
+      else
+        fallback()
+      end
+    end,
+    ['<S-Tab>'] = function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      -- elseif luasnip.jumpable(-1) then
+      --   luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end,
+  },
+  sources = {
+    { name = 'nvim_lsp' },
+    { name = 'ultisnips' },
+  },
 }
 
 -- Call before saving go files to add/remove imports automatically

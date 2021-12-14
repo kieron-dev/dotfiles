@@ -192,12 +192,8 @@ let signify_priority=5
 " ---------------------------------------------------------------------
 
 " --------------------- COMPLETION ------------------------------------
-set completeopt=menuone,noinsert,noselect
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+set completeopt=menu,menuone,noselect
 set shortmess+=c
-let g:completion_enable_snippet = 'UltiSnips'
-autocmd BufEnter * lua require'completion'.on_attach()
 " ---------------------------------------------------------------------
 
 " ------------------------------ FOLDING ------------------------------
