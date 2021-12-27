@@ -26,17 +26,6 @@ endif
 let mapleader=' '
 let maplocalleader='\'
 
-"Replace escape with jk
-inoremap jk <esc>
-
-"Convert current word to uppercase
-inoremap <C-u> <esc>mzgUiw`za
-
-command! WQ wq
-command! Wq wq
-command! W w
-command! Q q
-
 " restore file cursor position
 autocmd BufReadPost *
     \ if line("'\"") > 1 && line("'\"") <= line("$") |
@@ -46,31 +35,10 @@ autocmd BufReadPost *
 " Increase the maximum amount of memory to use for pattern matching
 set maxmempattern=2000
 
-"show the changes after the last save
-function! s:DiffWithSaved()
-  let filetype=&ft
-  diffthis
-  vnew | r # | normal! 1Gdd
-  diffthis
-  exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
-endfunction
-
-com! DiffSaved call s:DiffWithSaved()
-
 " Maximize current window
 command Foc execute "winc | | winc _"
 " Show all windows
 command Unfoc execute "winc ="
-
-" vimrc key mappings
-nmap <silent> <leader>ve :edit ~/.config/nvim/init.vim<CR>
-nmap <silent> <leader>vs :source ~/.config/nvim/init.vim<CR>
-
-" Read *.pl files as prolog files
-augroup ft_prolog
-    au!
-    au BufNewFile,BufRead *.pl set filetype=prolog
-augroup END
 
 " save on enter
 nnoremap <silent> <expr> <cr> empty(&buftype) ? ':w<cr>' : '<cr>'
@@ -169,18 +137,48 @@ set hlsearch                "Highlight matches
 set ignorecase              "Ignore case on search
 " ---------------------------------------------------------------------
 
-" ------------------------ LUA MODULES SETUP --------------------------
-" load LSP
-" must be called *after* updating colorscheme, else errors aren't highlighted
-lua require('config.lsp')
+lua <<EOF
+require'navigator'.setup({
+    -- default_mapping = true,
+    border = 'single',
+    keymaps = {
+        {key = 'gd', func = 'definition()'},
+    },
+    lsp = {
+        code_action = {enable = true, sign = true, sign_priority = 40, virtual_text = true},
+        code_lens_action = {enable = true, sign = true, sign_priority = 40, virtual_text = true},
+        gopls = {
+            settings = {
+                gopls = {
+                    gofumpt = true,
+                },
+            },
+        },
+    },
+})
+require('config.lspstatus')
+require('config.treesitter')
+require('config.cmp')
+require('lsp_signature').setup({
+    floating_window = false,
+})
 
-lua require('lspsaga').init_lsp_saga()
-lua require('config.lspstatus')
-lua require('config.treesitter')
-
-" display line error in popup after 1/2 second
-set updatetime=500
-autocmd CursorHold * Lspsaga show_line_diagnostics
+-- Call before saving go files to add/remove imports automatically
+function LSP_organize_imports()
+    local params = vim.lsp.util.make_range_params()
+    params.context = {only = {"source.organizeImports"}}
+    local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 3000)
+    for _, res in pairs(result or {}) do
+        for _, r in pairs(res.result or {}) do
+            if r.edit then
+                vim.lsp.util.apply_workspace_edit(r.edit)
+            else
+                vim.lsp.buf.execute_command(r.command)
+            end
+        end
+    end
+end
+EOF
 
 " ---------------------------------------------------------------------
 
@@ -206,7 +204,7 @@ set foldmethod=expr
 " -------------------------- AUTO FORMAT ------------------------------
 augroup AutoFormat
     autocmd!
-    autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync(nil, 10000); LSP_organize_imports()
+    autocmd BufWritePre *.go lua LSP_organize_imports()
     autocmd BufWritePre *.rb lua vim.lsp.buf.formatting_sync(nil, 3000)
     autocmd BufWritePre *.json,*.md PrettierAsync
 augroup END
@@ -474,8 +472,8 @@ let g:shfmt_fmt_on_save = 1
 " --------------------------------- Snippets  -------------------------------
 """ ultisnips
 let g:UltiSnipsExpandTrigger='<c-j>'
-let g:UltiSnipsJumpForwardTrigger='<c-f>'
-let g:UltiSnipsJumpBackwardTrigger='<c-b>'
+let g:UltiSnipsJumpForwardTrigger='<c-n>'
+let g:UltiSnipsJumpBackwardTrigger='<c-p>'
 " --------------------------------------------------------------------------
 
 " --------------------------------- FuzzyFind  -----------------------------

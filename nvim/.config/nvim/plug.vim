@@ -18,8 +18,6 @@ call plug#begin('~/.vim/plugged')
     Plug 'christoomey/vim-system-copy'
     " Navigate through vim splits seamlessly
     Plug 'christoomey/vim-tmux-navigator'
-    " popup windows for LSP helpers
-    Plug 'tami5/lspsaga.nvim'
     " Light and configurable statusline
     Plug 'itchyny/lightline.vim'
     " Preview markdown files in the browser
@@ -47,11 +45,14 @@ call plug#begin('~/.vim/plugged')
     " Config for built-in nvim lsp
     Plug 'neovim/nvim-lspconfig'
     " lsp auto completions
-    Plug 'hrsh7th/nvim-cmp'
+    Plug 'ray-x/lsp_signature.nvim'
+    Plug 'ray-x/guihua.lua', {'do': 'cd lua/fzy && make' }
+    Plug 'ray-x/navigator.lua'
     " LSP source for nvim-cmp
     Plug 'hrsh7th/cmp-nvim-lsp'
     " Snippets source for nvim-cmp
     Plug 'quangnguyen30192/cmp-nvim-ultisnips'
+    Plug 'hrsh7th/nvim-cmp'
 
     " lsp status helper
     Plug 'nvim-lua/lsp-status.nvim'

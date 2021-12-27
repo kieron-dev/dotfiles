@@ -3,6 +3,7 @@
 set -euxo pipefail
 
 sudo add-apt-repository -y ppa:neovim-ppa/stable
+sudo add-apt-repository -y ppa:intel-opencl/intel-opencl
 
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F9FDA6BED73CDC22
 cat <<EOF | sudo tee /etc/apt/sources.list.d/dell.list
@@ -50,7 +51,8 @@ sudo apt -y install \
   direnv \
   gimp \
   imagemagick \
-  python3-pip
+  python3-pip \
+  intel-opencl-icd
 
 sudo npm i -g bash-language-server
 sudo npm i -g prettier
