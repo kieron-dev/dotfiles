@@ -54,6 +54,8 @@ sudo apt -y install \
   python3-pip \
   intel-opencl-icd
 
+snap install sweethome3d-homedesign
+
 sudo npm i -g bash-language-server
 sudo npm i -g prettier
 go install mvdan.cc/sh/v3/cmd/shfmt@latest
