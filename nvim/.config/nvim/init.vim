@@ -137,31 +137,12 @@ set hlsearch                "Highlight matches
 set ignorecase              "Ignore case on search
 " ---------------------------------------------------------------------
 
+let g:coq_settings = { 'auto_start': v:true }
+
 lua <<EOF
-require'navigator'.setup({
-    -- default_mapping = true,
-    border = 'single',
-    keymaps = {
-        {key = 'gd', func = 'definition()'},
-    },
-    lsp = {
-        code_action = {enable = true, sign = true, sign_priority = 40, virtual_text = true},
-        code_lens_action = {enable = true, sign = true, sign_priority = 40, virtual_text = true},
-        gopls = {
-            settings = {
-                gopls = {
-                    gofumpt = true,
-                },
-            },
-        },
-    },
-})
 require('config.lspstatus')
 require('config.treesitter')
-require('config.cmp')
-require('lsp_signature').setup({
-    floating_window = false,
-})
+require('config.lsp')
 
 -- Call before saving go files to add/remove imports automatically
 function LSP_organize_imports()
@@ -204,7 +185,7 @@ set foldmethod=expr
 " -------------------------- AUTO FORMAT ------------------------------
 augroup AutoFormat
     autocmd!
-    autocmd BufWritePre *.go lua LSP_organize_imports()
+    autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync(nil, 3000); LSP_organize_imports()
     autocmd BufWritePre *.rb lua vim.lsp.buf.formatting_sync(nil, 3000)
     autocmd BufWritePre *.json,*.md PrettierAsync
 augroup END

@@ -44,15 +44,11 @@ call plug#begin('~/.vim/plugged')
     Plug 'nanotech/jellybeans.vim'
     " Config for built-in nvim lsp
     Plug 'neovim/nvim-lspconfig'
-    " lsp auto completions
-    Plug 'ray-x/lsp_signature.nvim'
-    Plug 'ray-x/guihua.lua', {'do': 'cd lua/fzy && make' }
-    Plug 'ray-x/navigator.lua'
-    " LSP source for nvim-cmp
-    Plug 'hrsh7th/cmp-nvim-lsp'
-    " Snippets source for nvim-cmp
-    Plug 'quangnguyen30192/cmp-nvim-ultisnips'
-    Plug 'hrsh7th/nvim-cmp'
+    " coq_nvim
+    " main one
+    Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
+    " 9000+ Snippets
+    Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
 
     " lsp status helper
     Plug 'nvim-lua/lsp-status.nvim'
@@ -70,8 +66,6 @@ call plug#begin('~/.vim/plugged')
     Plug 'RRethy/vim-illuminate'
     " Directory tree explorer
     Plug 'scrooloose/nerdtree'
-    " Add various code snippets
-    Plug 'SirVer/ultisnips'
     " Comment stuff out
     Plug 'tpope/vim-commentary'
     " Unix utility commands

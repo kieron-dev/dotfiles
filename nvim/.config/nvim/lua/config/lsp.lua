@@ -9,7 +9,15 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     }
 )
 
+local opts = { noremap=true, silent=true }
+vim.api.nvim_set_keymap('n', '<space>ee', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+vim.api.nvim_set_keymap('n', '[g', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+vim.api.nvim_set_keymap('n', ']g', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+vim.api.nvim_set_keymap('n', '<space>ef', '<cmd>lua vim.diagnostic.setqflist()<CR>', opts)
+vim.api.nvim_set_keymap('n', '<space>ea', '<cmd>lua vim.diagnostic.setqflist({workspace = true})<CR>', opts)
+
 local on_attach = function(client, bufnr)
+
     local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
     local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
@@ -17,42 +25,35 @@ local on_attach = function(client, bufnr)
 
     -- Mappings
     local opts = { noremap=true, silent=true }
-    buf_set_keymap('n', 'K', ':Lspsaga hover_doc<CR>', opts)
+    buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
     buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
     buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
     buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
     buf_set_keymap('n', 'gy', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-    buf_set_keymap('n', 'gs', ':Lspsaga signature_help<CR>', opts)
-    buf_set_keymap('n', 'gh', ':Lspsaga lsp_finder<CR>', opts)
+    buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+    buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+    -- buf_set_keymap('v', '<leader>ca', ':<C-U>Lspsaga range_code_action<CR>', opts)
 
-    buf_set_keymap('n', '<leader>ca', ':Lspsaga code_action<CR>', opts)
-    buf_set_keymap('v', '<leader>ca', ':<C-U>Lspsaga range_code_action<CR>', opts)
 
-    buf_set_keymap('n', '<leader>rn', ':Lspsaga rename<CR>', opts)
-
-    buf_set_keymap('n', '<leader>ee', ':Lspsaga show_line_diagnostics<CR>', opts)
-    buf_set_keymap('n', '[g', ':Lspsaga diagnostic_jump_prev<CR>', opts)
-    buf_set_keymap('n', '<leader>ep', ':Lspsaga diagnostic_jump_prev<CR>', opts)
-    buf_set_keymap('n', ']g', ':Lspsaga diagnostic_jump_next<CR>', opts)
-    buf_set_keymap('n', '<leader>en', ':Lspsaga diagnostic_jump_next<CR>', opts)
-    buf_set_keymap('n', '<leader>eb', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-    buf_set_keymap('n', '<leader>ea', '<cmd>lua vim.lsp.diagnostic.set_loclist({workspace = true})<CR>', opts)
 end
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 
 -- Use a loop to conveniently both setup defined servers
 -- and map buffer local keybindings when the language server attaches
+local coq = require("coq")
 local servers = { "tsserver", "bashls" }
 for _, lsp in ipairs(servers) do
-    nvim_lsp[lsp].setup {
+    nvim_lsp[lsp].setup(coq.lsp_ensure_capabilities(
+    vim.tbl_deep_extend("force", {
         on_attach = on_attach,
         capabilities = capabilities,
-    }
+        flags = {debounce_text_changes = 150},
+    }, {})))
 end
 
-nvim_lsp.gopls.setup{
+nvim_lsp.gopls.setup(coq.lsp_ensure_capabilities(
+vim.tbl_deep_extend("force", {
     on_attach = on_attach,
     cmd = { 'gopls', '--remote=auto' },
     settings = {
@@ -65,20 +66,6 @@ nvim_lsp.gopls.setup{
         }
     },
     capabilities = capabilities,
-}
+    flags = {debounce_text_changes = 150},
+}, {})))
 
--- Call before saving go files to add/remove imports automatically
-function LSP_organize_imports()
-    local params = vim.lsp.util.make_range_params()
-    params.context = {only = {"source.organizeImports"}}
-    local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 3000)
-    for _, res in pairs(result or {}) do
-        for _, r in pairs(res.result or {}) do
-            if r.edit then
-                vim.lsp.util.apply_workspace_edit(r.edit)
-            else
-                vim.lsp.buf.execute_command(r.command)
-            end
-        end
-    end
-end

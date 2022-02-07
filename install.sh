@@ -2,9 +2,11 @@
 
 set -euxo pipefail
 
-sudo add-apt-repository -y ppa:neovim-ppa/stable
-sudo add-apt-repository -y ppa:intel-opencl/intel-opencl
+curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+chmod u+x nvim.appimage
+sudo mv nvim.appimage /usr/bin/nvim
 
+#sudo add-apt-repository -y ppa:intel-opencl/intel-opencl
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F9FDA6BED73CDC22
 cat <<EOF | sudo tee /etc/apt/sources.list.d/dell.list
 deb http://dell.archive.canonical.com/updates/ focal-dell public
@@ -32,7 +34,6 @@ sudo apt-get upgrade -y
 sudo apt -y install \
   cowsay \
   fortune \
-  neovim \
   tmux \
   tmux-plugin-manager \
   keepassxc \
@@ -52,13 +53,14 @@ sudo apt -y install \
   gimp \
   imagemagick \
   python3-pip \
-  intel-opencl-icd
+  intel-opencl-icd \
+  python3-venv \
+  darktable
 
 snap install sweethome3d-homedesign
 
 sudo npm i -g bash-language-server
 sudo npm i -g prettier
-go install mvdan.cc/sh/v3/cmd/shfmt@latest
 
 pushd $HOME/dotfiles
 git pull
@@ -92,6 +94,7 @@ gsettings set org.gnome.desktop.interface cursor-blink false
 rm -rf $HOME/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/
 pushd $temp
 curl -sL https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v71.shell-extension.zip >dash-to-dock.zip
+mkdir -p $HOME/.local/share/gnome-shell/extensions/
 unzip dash-to-dock.zip -d $HOME/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com/
 popd
 gnome-extensions enable dash-to-dock@micxgx.gmail.com
@@ -105,8 +108,10 @@ curl -sL https://go.dev/dl/go1.17.4.linux-amd64.tar.gz | sudo tar -C /usr/local 
 if grep -qv "/usr/local/go/bin" $HOME/.bashrc; then
   echo export PATH=$PATH:/usr/local/go/bin >>$HOME/.bashrc
 fi
-go install github.com/onsi/ginkgo/ginkgo@latest
+export PATH=$PATH:/usr/local/go/bin
+go install github.com/onsi/ginkgo/v2/ginkgo@latest
 go install golang.org/x/tools/gopls@latest
+go install mvdan.cc/sh/v3/cmd/shfmt@latest
 
 rm -rf $HOME/.oh-my-zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc --skip-chsh
