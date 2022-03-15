@@ -103,7 +103,7 @@ gsettings set org.gnome.shell.extensions.dash-to-dock apply-custom-theme true
 
 #golang
 sudo rm -rf /usr/local/go
-curl -sL https://go.dev/dl/go1.17.4.linux-amd64.tar.gz | sudo tar -C /usr/local -xzf -
+curl -sL https://go.dev/dl/go1.18.linux-amd64.tar.gz | sudo tar -C /usr/local -xzf -
 
 if grep -qv "/usr/local/go/bin" $HOME/.bashrc; then
   echo export PATH=$PATH:/usr/local/go/bin >>$HOME/.bashrc
