@@ -41,6 +41,8 @@ sudo apt -y install \
   curl \
   build-essential \
   ripgrep \
+  nfs-common \
+  glabels \
   npm \
   libfprint-2-tod1-goodix \
   oem-somerville-meta \
