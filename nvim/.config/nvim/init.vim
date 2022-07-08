@@ -343,7 +343,7 @@ function! LightlineBranch()
   if &ft == 'nerdtree'
     return ''
   endif
-  let branch = fugitive#head()
+  let branch = FugitiveHead()
   return branch !=# '' ? ' ' . branch : ''
 endfunction
 
