@@ -135,6 +135,7 @@ augroup END
 set incsearch               "Incremental search
 set hlsearch                "Highlight matches
 set ignorecase              "Ignore case on search
+set smartcase
 " ---------------------------------------------------------------------
 
 lua <<EOF
