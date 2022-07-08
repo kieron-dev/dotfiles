@@ -49,14 +49,17 @@ end
 
 nvim_lsp.gopls.setup{
     on_attach = on_attach,
-    cmd = { 'gopls', '--remote=auto' },
+    cmd = { 'gopls', 'serve' },
+    filetypes = {'go', 'gomod'},
     settings = {
         gopls = {
             completeUnimported = true,
             usePlaceholders = true,
             staticcheck = true,
             gofumpt = true,
-            buildFlags = {"-tags=e2e"},
+            analyses = {
+                unusedparams = true,
+            },
         }
     },
     capabilities = capabilities,
