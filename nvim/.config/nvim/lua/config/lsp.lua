@@ -10,37 +10,32 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 )
 
 local on_attach = function(client, bufnr)
-    local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-    local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+    -- Enable completion triggered by <c-x><c-o>
+    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-    buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+    local bufopts = { noremap=true, silent=true, buffer=bufnr }
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+    vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, bufopts)
 
-    -- Mappings
-    local opts = { noremap=true, silent=true }
-    buf_set_keymap('n', 'K', ':Lspsaga hover_doc<CR>', opts)
-    buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-    buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-    buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-    buf_set_keymap('n', 'gy', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-    buf_set_keymap('n', 'gs', ':Lspsaga signature_help<CR>', opts)
-    buf_set_keymap('n', 'gh', ':Lspsaga lsp_finder<CR>', opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+    vim.keymap.set('n', 'gy', vim.lsp.buf.type_definition, bufopts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
 
-    buf_set_keymap('n', '<leader>ca', ':Lspsaga code_action<CR>', opts)
-    buf_set_keymap('v', '<leader>ca', ':<C-U>Lspsaga range_code_action<CR>', opts)
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
+    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
+    vim.keymap.set('v', '<leader>ca', vim.lsp.buf.range_code_action, bufopts)
+    vim.keymap.set('n', '<leader>f', vim.lsp.buf.formatting, bufopts)
 
-    buf_set_keymap('n', '<leader>rn', ':Lspsaga rename<CR>', opts)
+    vim.keymap.set('n', '[g', vim.diagnostic.goto_prev, opts)
+    vim.keymap.set('n', ']g', vim.diagnostic.goto_next, opts)
+    vim.keymap.set('n', '<leader>ea', vim.diagnostic.setloclist, opts)
 
-    buf_set_keymap('n', '<leader>ee', ':Lspsaga show_line_diagnostics<CR>', opts)
-    buf_set_keymap('n', '[g', ':Lspsaga diagnostic_jump_prev<CR>', opts)
-    buf_set_keymap('n', '<leader>ep', ':Lspsaga diagnostic_jump_prev<CR>', opts)
-    buf_set_keymap('n', ']g', ':Lspsaga diagnostic_jump_next<CR>', opts)
-    buf_set_keymap('n', '<leader>en', ':Lspsaga diagnostic_jump_next<CR>', opts)
-    buf_set_keymap('n', '<leader>eb', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-    buf_set_keymap('n', '<leader>ea', '<cmd>lua vim.lsp.diagnostic.set_loclist({workspace = true})<CR>', opts)
 end
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+-- Setup lspconfig.
+local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 -- Use a loop to conveniently both setup defined servers
 -- and map buffer local keybindings when the language server attaches
@@ -75,10 +70,11 @@ function LSP_organize_imports()
     for _, res in pairs(result or {}) do
         for _, r in pairs(res.result or {}) do
             if r.edit then
-                vim.lsp.util.apply_workspace_edit(r.edit)
+                vim.lsp.util.apply_workspace_edit(r.edit, "utf-8")
             else
                 vim.lsp.buf.execute_command(r.command)
             end
         end
     end
+    vim.lsp.buf.formatting_sync(nil, 3000)
 end

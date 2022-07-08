@@ -139,46 +139,10 @@ set smartcase
 " ---------------------------------------------------------------------
 
 lua <<EOF
-require'navigator'.setup({
-    -- default_mapping = true,
-    border = 'single',
-    keymaps = {
-        {key = 'gd', func = 'definition()'},
-    },
-    lsp = {
-        code_action = {enable = true, sign = true, sign_priority = 40, virtual_text = true},
-        code_lens_action = {enable = true, sign = true, sign_priority = 40, virtual_text = true},
-        gopls = {
-            settings = {
-                gopls = {
-                    gofumpt = true,
-                },
-            },
-        },
-    },
-})
+require('config.lsp')
 require('config.lspstatus')
 require('config.treesitter')
 require('config.cmp')
-require('lsp_signature').setup({
-    floating_window = false,
-})
-
--- Call before saving go files to add/remove imports automatically
-function LSP_organize_imports()
-    local params = vim.lsp.util.make_range_params()
-    params.context = {only = {"source.organizeImports"}}
-    local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 3000)
-    for _, res in pairs(result or {}) do
-        for _, r in pairs(res.result or {}) do
-            if r.edit then
-                vim.lsp.util.apply_workspace_edit(r.edit)
-            else
-                vim.lsp.buf.execute_command(r.command)
-            end
-        end
-    end
-end
 EOF
 
 " ---------------------------------------------------------------------
@@ -218,8 +182,8 @@ nnoremap j gj
 nnoremap k gk
 
 " Movement in popup menu
-inoremap <expr> <C-j> pumvisible() ? "\<C-N>" : "\<C-j>"
-inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
+" inoremap <expr> <C-j> pumvisible() ? "\<C-N>" : "\<C-j>"
+" inoremap <expr> <C-k> pumvisible() ? "\<C-p>" : "\<C-k>"
 " ---------------------------------------------------------------------
 
 

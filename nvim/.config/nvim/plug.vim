@@ -44,10 +44,6 @@ call plug#begin('~/.vim/plugged')
     Plug 'nanotech/jellybeans.vim'
     " Config for built-in nvim lsp
     Plug 'neovim/nvim-lspconfig'
-    " lsp auto completions
-    Plug 'ray-x/lsp_signature.nvim'
-    Plug 'ray-x/guihua.lua', {'do': 'cd lua/fzy && make' }
-    Plug 'ray-x/navigator.lua'
     " LSP source for nvim-cmp
     Plug 'hrsh7th/cmp-nvim-lsp'
     " Snippets source for nvim-cmp
