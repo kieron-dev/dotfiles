@@ -2,7 +2,6 @@
 
 set -euxo pipefail
 
-sudo add-apt-repository -y ppa:neovim-ppa/stable
 sudo add-apt-repository -y ppa:intel-opencl/intel-opencl
 
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F9FDA6BED73CDC22
@@ -32,7 +31,6 @@ sudo apt-get upgrade -y
 sudo apt -y install \
   cowsay \
   fortune \
-  neovim \
   tmux \
   tmux-plugin-manager \
   keepassxc \
@@ -55,6 +53,10 @@ sudo apt -y install \
   imagemagick \
   python3-pip \
   intel-opencl-icd
+
+wget https://github.com/neovim/neovim/releases/download/v0.7.2/nvim-linux64.deb
+sudo apt install nvim-linux64.deb
+rm nvim-linux64.deb
 
 snap install sweethome3d-homedesign
 
