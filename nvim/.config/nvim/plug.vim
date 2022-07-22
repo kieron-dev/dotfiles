@@ -46,9 +46,17 @@ call plug#begin('~/.vim/plugged')
     Plug 'neovim/nvim-lspconfig'
     " LSP source for nvim-cmp
     Plug 'hrsh7th/cmp-nvim-lsp'
-    " Snippets source for nvim-cmp
     Plug 'quangnguyen30192/cmp-nvim-ultisnips'
     Plug 'hrsh7th/nvim-cmp'
+    Plug 'hrsh7th/cmp-buffer'
+    Plug 'hrsh7th/cmp-path'
+    Plug 'hrsh7th/cmp-nvim-lua'
+    Plug 'onsails/lspkind.nvim'
+    " colorscheme
+    Plug 'sainnhe/edge'
+    Plug 'romainl/Apprentice', {'branch': 'fancylines-and-neovim'}
+    Plug 'dracula/vim', {'as': 'dracula'}
+    Plug 'nanotech/jellybeans.vim'
 
     " lsp status helper
     Plug 'nvim-lua/lsp-status.nvim'
@@ -57,7 +65,7 @@ call plug#begin('~/.vim/plugged')
     " ANSI escape sequences concealed, but highlighted as specified
     Plug 'powerman/vim-plugin-AnsiEsc'
     " prettier formatting
-    Plug 'prettier/vim-prettier', { 'do': 'npm install', 'for': ['json', 'markdown'] }
+    Plug 'prettier/vim-prettier', { 'do': 'npm install', 'for': ['markdown'] }
     " Reveal the commit messages under the cursor in a 'popup window'
     Plug 'rhysd/git-messenger.vim'
     " Make hlsearch more useful
@@ -80,6 +88,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-rhubarb'
     " Provides mappings to easily delete, change and add surroundings (parentheses, brackets, quotes, XML tags, and more) in pairs
     Plug 'tpope/vim-surround'
+    Plug 'tpope/vim-sensible'
     " Useful mappings
     Plug 'tpope/vim-unimpaired'
     " Add snippets for Ginkgo BDD testing library for go

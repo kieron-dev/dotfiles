@@ -2,15 +2,13 @@ source $HOME/.config/nvim/plug.vim
 
 " ------------------------------ GENERAL ------------------------------
 set mouse=a                                                           "Enable mouse
-set backspace=indent,eol,start                                        "Make backspace normal
 set nocompatible                                                      "Disable vi compatibility. Because we're not in 1995
 set tw=0                                                              "Disable automactic line wrapping
-set list                                                              "Display whitespace characters
-set listchars=tab:▸\ ,trail:~,extends:>,precedes:<,space:·            "Specify whitespace characters visualization
 set noerrorbells                                                      "Disable beeping
 set encoding=utf8                                                     "Encoding
 set ffs=unix,dos                                                      "File formats that will be tried (in order) when vim reads and writes to a file
 set splitbelow                                                        "Set preview window position to bottom of the page
+set splitright
 set scrolloff=5                                                       "Show at least N lines above/below the cursor.
 set hidden                                                            "Opening a new file when the current buffer has unsaved changes causes files to be hidden instead of closed
 set undolevels=1000                                                   "Undo many times
@@ -61,45 +59,7 @@ inoremap <c-f> <c-\><c-o>l
 " ---------------------------------------------------------------------
 
 " ------------------------------ COLORS ------------------------------
-"Enable syntax processing
-syntax enable
-
-" Colorscheme overrides
-let g:jellybeans_overrides = {'background': { 'guibg': '1c1c1c' }}
-
-" This colorscheme
 colorscheme jellybeans
-
-" Because jellybeans shows wrong background colors for whitespace characters  on current line
-highlight NonText guibg=NONE
-
-" Line numbers
-highlight LineNr guifg=#545252 guibg=#1c1c1c
-
-" Current line colors
-highlight CursorLine guibg=#232323
-
-" Numbers when cursorline is enabled
-highlight CursorLineNr guibg=#1c1c1c guifg=#6A95EA
-
-" Whitespace characters color
-highlight SpecialKey guifg=grey35
-
-" Search result highlight color
-highlight Search gui=bold guifg=#000000 guibg=#6A95EA
-
-" Vertical split highlight color
-highlight VertSplit guifg=#1c1c1c guibg=#1c1c1c
-
-" Sign column colors
-highlight SignColumn term=standout guifg=#777777 guibg=#1c1c1c
-
-" Status lines of not-current windows
-highlight StatusLineNC guibg=#1c1c1c
-
-" Wildmenu autocomplete
-highlight StatusLine gui=italic guifg=grey guibg=#1c1c1c
-
 " ---------------------------------------------------------------------
 
 " ------------------------------ SPACES & TABS -----------------------------
@@ -115,7 +75,6 @@ autocmd Filetype ruby set tabstop=2 softtabstop=2 shiftwidth=2
 " ------------------------------ UI CONFIG ------------------------------
 set number                              "Show line numbers
 filetype indent on                      "Load filetype-specific indent files
-set wildmenu                            "Visual autocomplete for command menu
 set wildmode=longest,full               "Complete till longest common string && Complete the next full match
 set lazyredraw                          "Redraw only when we need to.
 set showmatch                           "Highlight matching [{()}]
@@ -132,7 +91,6 @@ augroup END
 " ---------------------------------------------------------------------
 
 " ------------------------------ SEARCHING ------------------------------
-set incsearch               "Incremental search
 set hlsearch                "Highlight matches
 set ignorecase              "Ignore case on search
 set smartcase
@@ -171,7 +129,7 @@ augroup AutoFormat
     autocmd!
     autocmd BufWritePre *.go lua LSP_organize_imports()
     autocmd BufWritePre *.rb lua vim.lsp.buf.formatting_sync(nil, 3000)
-    autocmd BufWritePre *.json,*.md PrettierAsync
+    autocmd BufWritePre *.md PrettierAsync
 augroup END
 " ---------------------------------------------------------------------
 
@@ -199,12 +157,12 @@ function! s:Repl()
 endfunction
 
 " NB: this supports "rp that replaces the selection by the contents of @r
-vnoremap <silent> <expr> p <sid>Repl()
+xnoremap <silent> <expr> p <sid>Repl()
 " ---------------------------------------------------------------------
 
 " ------------------------------ CONTINUE INDENTING---------------------
-vnoremap > >gv
-vnoremap < <gv
+xnoremap > >gv
+xnoremap < <gv
 " ---------------------------------------------------------------------
 
 " =======================================================================================
@@ -260,47 +218,6 @@ let NERDTreeShowHidden=1
 " --------------------------------------------------------------------------
 
 " --------------------------------- Lightline --------------------------------
-
-" Show statusline
-set laststatus=2
-
-" Colors
-let s:green = [ '#99ad6a', 107 ]
-let s:red = [ '#dd1c1c', 167 ]
-let s:yellow = [ '#ffb964', 215 ]
-let s:blue = [ '#6A95EA', 103, 'bold' ]
-let s:lightgrey = [ '#999494', 'none' ]
-let s:blackish = [ '#1c1c1c', 'none' ]
-let s:darkgrey = [ '#282525', 'none' ]
-
-let s:p = {'normal': {}, 'inactive': {}, 'insert': {}, 'replace': {}, 'visual': {}, 'tabline': {}}
-
-" Middle
-let s:p.normal.middle = [ [ s:lightgrey, s:blackish ] ]
-
-" Left
-let s:p.normal.left = [ [ s:blue, s:blackish ], [ s:green, s:blackish ], [ s:red, s:blackish ], [ s:lightgrey, s:blackish ] ]
-let s:p.insert.left = [ [ s:blue, s:blackish ], [ s:green, s:blackish ], [ s:red, s:blackish ], [ s:lightgrey, s:blackish ] ]
-let s:p.replace.left = [ [ s:blue, s:blackish ], [ s:green, s:blackish ], [ s:red, s:blackish ], [ s:lightgrey, s:blackish ] ]
-let s:p.visual.left = [ [ s:blue, s:blackish ], [ s:green, s:blackish ], [ s:red, s:blackish ], [ s:lightgrey, s:blackish ] ]
-
-" Right
-let s:p.normal.right = [ [ s:lightgrey, s:blackish ], [ s:lightgrey, s:blackish ], [ s:lightgrey, s:blackish ] ]
-
-" Inactive
-let s:p.inactive.middle = [ [ s:lightgrey, s:darkgrey ] ]
-let s:p.inactive.right = [ [ s:darkgrey, s:darkgrey ], [ s:darkgrey, s:darkgrey ] ]
-
-" Errors & warnings
-let s:p.normal.error = [ [ s:red, s:blackish ] ]
-let s:p.normal.warning = [ [ s:yellow, s:blackish ] ]
-
-" Tabs
-let s:p.tabline.left = [ [ s:lightgrey, s:blackish ] ]
-let s:p.tabline.tabsel = [ [ s:blue, s:blackish ] ]
-
-" Set the palette
-let g:lightline#colorscheme#jellybeans#palette = lightline#colorscheme#flatten(s:p)
 
 " Lightline configs
 let g:lightline = {
@@ -408,7 +325,7 @@ endfunction
 
 " Toggle comment with ctrl + /
 nmap <C-_> gc$
-vmap <C-_> gc
+xmap <C-_> gc
 
 " --------------------------------- Vim-Markdown-Preview --------------------------------
 
@@ -437,8 +354,8 @@ let g:shfmt_fmt_on_save = 1
 " --------------------------------- Snippets  -------------------------------
 """ ultisnips
 let g:UltiSnipsExpandTrigger='<c-j>'
-let g:UltiSnipsJumpForwardTrigger='<c-n>'
-let g:UltiSnipsJumpBackwardTrigger='<c-p>'
+let g:UltiSnipsJumpForwardTrigger='<c-k>'
+let g:UltiSnipsJumpBackwardTrigger='<c-j>'
 " --------------------------------------------------------------------------
 
 " --------------------------------- FuzzyFind  -----------------------------
@@ -527,7 +444,7 @@ nnoremap <silent> <leader>tg :TestVisit<cr>
 " -------------------------------- vim-rhubarb -----------------------------
 " open in github
 nmap <silent> <leader>gh :GBrowse<cr>
-vmap <silent> <leader>gh :GBrowse<cr>
+xmap <silent> <leader>gh :GBrowse<cr>
 " --------------------------------------------------------------------------
 "
 set nolist
@@ -567,3 +484,16 @@ command! -bang AS call GoAlternateSwitch(<bang>0, 'split')
 command! -bang AV call GoAlternateSwitch(<bang>0, 'vsplit')
 
 " --------------------------------------------------------------------------
+
+" ----------------------- JSON / YAML TAGS ---------------------------------
+" snakecase converts a string to snake case. i.e: FooBar -> foo_bar
+" Copied from tpope/vim-abolish
+" Used in go.snippets for json and yaml expansions
+function! Snakecase(word) abort
+  let word = substitute(a:word, '::', '/', 'g')
+  let word = substitute(word, '\(\u\+\)\(\u\l\)', '\1_\2', 'g')
+  let word = substitute(word, '\(\l\|\d\)\(\u\)', '\1_\2', 'g')
+  let word = substitute(word, '[.-]', '_', 'g')
+  let word = tolower(word)
+  return word
+endfunction
